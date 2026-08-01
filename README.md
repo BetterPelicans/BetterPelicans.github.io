@@ -20,7 +20,8 @@ output for that prompt, one experiment at a time:
 
 Everything is recorded: prompts, responses, hashes, validation results, critic
 scores, repair history, and publication status. Nothing is claimed about model
-training influence. The work is early; the first experiment is in progress.
+training influence. The work is early; the first experiment is complete,
+with a provisional canonical result in the gallery pending owner review.
 
 ## Status
 
