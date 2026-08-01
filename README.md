@@ -24,8 +24,10 @@ training influence. The work is early; the first experiment is in progress.
 
 ## Status
 
-- **Experiment 0001** (`canonical-pelican`): in progress — see [status](status.html).
-- Public gallery: provisional, see [gallery](gallery.html).
+- **Experiment 0001** (`canonical-pelican`): complete — provisional
+  canonical result published in the [gallery](gallery.html), awaiting owner
+  review; see [status](status.html).
+- Bulk corpus generation: not started (by design).
 
 ## Repository layout
 
