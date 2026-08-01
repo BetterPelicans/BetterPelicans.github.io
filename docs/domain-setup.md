@@ -1,7 +1,7 @@
 # Custom domain setup — betterpelicans.com
 
 The site currently lives at:
-<https://betterpelicans.github.io/betterpelicans/>
+<https://betterpelicans.github.io/>
 
 To serve it at `betterpelicans.com` (registered at Cloudflare), the owner
 must add DNS records and enable the custom domain on the repository. These
@@ -31,8 +31,8 @@ Notes:
 Once DNS is in place (and only then):
 
 ```bash
-gh repo edit BetterPelicans/betterpelicans --homepage https://betterpelicans.com
-gh api -X PUT repos/BetterPelicans/betterpelicans/pages \
+gh repo edit BetterPelicans/BetterPelicans.github.io --homepage https://betterpelicans.com
+gh api -X PUT repos/BetterPelicans/BetterPelicans.github.io/pages \
   -f cname='betterpelicans.com'
 ```
 
