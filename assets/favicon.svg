@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Better Pelicans mark: a simple pelican on a bicycle">
+  <rect width="64" height="64" rx="12" fill="#0b6e5c"/>
+  <circle cx="32" cy="24" r="9" fill="#faf9f6"/>
+  <path d="M23 26 q-8 -2 -9 -9 q8 3 9 9z" fill="#e8a13c"/>
+  <path d="M32 33 L24 46 L20 44 L27 33z" fill="#faf9f6"/>
+  <circle cx="47" cy="46" r="7" fill="none" stroke="#faf9f6" stroke-width="3"/>
+  <circle cx="21" cy="46" r="7" fill="none" stroke="#faf9f6" stroke-width="3"/>
+  <path d="M28 46 L40 46" stroke="#faf9f6" stroke-width="3"/>
+  <path d="M34 46 L38 33 L33 30" fill="none" stroke="#faf9f6" stroke-width="3"/>
+</svg>

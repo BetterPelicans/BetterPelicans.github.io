@@ -1,0 +1,29 @@
+# Secrets — never commit these
+.env
+.env.*
+*.pem
+*.key
+!test*.key
+secrets/
+credentials*
+
+# Local tooling
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Logs and temp
+*.log
+tmp/
+.tmp/
+.DS_Store
+
+# Editor
+.idea/
+.vscode/
+*.swp
+
+# Generated build output (site is source-rooted; keep this clean)
+_dist/

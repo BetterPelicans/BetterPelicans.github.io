@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Methodology — Better Pelicans</title>
+  <meta name="description" content="How Better Pelicans generates, validates, critiques and repairs SVG candidates.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav aria-label="Main">
+      <a class="brand" href="index.html">Better Pelicans</a>
+      <ul>
+        <li><a href="methodology.html" aria-current="page">Methodology</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="status.html">Status</a></li>
+        <li><a href="https://github.com/BetterPelicans" rel="noopener">GitHub</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <h1>Methodology</h1>
+
+    <section>
+      <h2>Pipeline</h2>
+      <p>The pipeline is deliberately boring: each stage is a small script with
+      a defined input and output. Stages: <code>generate</code> →
+      <code>render</code> → <code>validate</code> → <code>critique</code> →
+      <code>repair</code> → <code>publish</code>. The code lives in the private
+      laboratory; this site documents behavior, not internals.</p>
+    </section>
+
+    <section>
+      <h2>Generation</h2>
+      <p>Each candidate is generated with a fixed source prompt (the canonical
+      benchmark wording), an expanded visual specification, and recorded model
+      settings. Candidates are independent: the first batch is 8–12 samples
+      from the same prompt/settings. Repairs are localized edits of an existing
+      candidate, tracked by parent ID.</p>
+    </section>
+
+    <section>
+      <h2>Deterministic validation</h2>
+      <p>Every candidate is checked programmatically:</p>
+      <ul>
+        <li>well-formed XML; valid SVG root and namespace;</li>
+        <li>no JavaScript, event handlers, external requests, embedded rasters,
+            external fonts or stylesheets;</li>
+        <li>reasonable file size and element/path counts;</li>
+        <li>usable <code>viewBox</code>;</li>
+        <li>successful deterministic rendering at 256×256, 1024×1024 and a
+            transparent-background variant;</li>
+        <li>reproducible hashes of the SVG and rendered output.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Critique rubric</h2>
+      <p>Candidates are scored separately on each specialist axis — never
+      collapsed into a single unexplained number:</p>
+      <ul>
+        <li>prompt compliance</li>
+        <li>pelican recognizability</li>
+        <li>pelican anatomy</li>
+        <li>bicycle recognizability</li>
+        <li>bicycle mechanical plausibility</li>
+        <li>bird–bicycle physical interaction</li>
+        <li>composition</li>
+        <li>visual hierarchy</li>
+        <li>aesthetic quality</li>
+        <li>SVG validity</li>
+        <li>editability</li>
+        <li>efficiency</li>
+        <li>absence of raster content</li>
+      </ul>
+      <p>Scores are recorded with written defects. Critiques are vision-assisted
+      and logged; contradictory visual findings are resolved deterministically
+      where possible.</p>
+    </section>
+
+    <section>
+      <h2>Repair</h2>
+      <p>Repairs are localized edits to a candidate (a beak, a pedal, a wheel),
+      applied with the same toolchain. Each repair is a new candidate with a
+      parent pointer. A maximum of three repair rounds per finalist.</p>
+    </section>
+
+    <section>
+      <h2>Publication</h2>
+      <p>Nothing enters this site without passing the
+      <a href="docs/publication-checklist.md">publication checklist</a> and a
+      secret scan. Provenance for every asset is documented in
+      <a href="docs/provenance.md">provenance.md</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Better Pelicans · <a href="https://github.com/BetterPelicans" rel="noopener">github.com/BetterPelicans</a></p>
+  </footer>
+</body>
+</html>

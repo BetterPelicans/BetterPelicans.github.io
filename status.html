@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Status — Better Pelicans</title>
+  <meta name="description" content="Infrastructure, pipeline, experiment and publication status for Better Pelicans.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav aria-label="Main">
+      <a class="brand" href="index.html">Better Pelicans</a>
+      <ul>
+        <li><a href="methodology.html">Methodology</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="status.html" aria-current="page">Status</a></li>
+        <li><a href="https://github.com/BetterPelicans" rel="noopener">GitHub</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <h1>Status</h1>
+    <p class="updated">Last updated: <time id="last-updated">2026-08-01</time></p>
+
+    <section>
+      <h2>Infrastructure</h2>
+      <dl class="status-list">
+        <dt>GitHub organization</dt><dd>operational</dd>
+        <dt>Public repository</dt><dd>operational</dd>
+        <dt>Laboratory repository</dt><dd>operational (private)</dd>
+        <dt>Site deployment</dt><dd>operational (GitHub Pages)</dd>
+        <dt>Custom domain</dt><dd>pending DNS configuration by owner</dd>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Pipeline</h2>
+      <dl class="status-list">
+        <dt>generate</dt><dd>operational</dd>
+        <dt>render</dt><dd>operational</dd>
+        <dt>validate</dt><dd>operational</dd>
+        <dt>critique</dt><dd>operational</dd>
+        <dt>repair</dt><dd>operational</dd>
+        <dt>publish</dt><dd>operational (checklist enforced)</dd>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Experiment 0001 — canonical-pelican</h2>
+      <dl class="status-list">
+        <dt>Prompt research</dt><dd>complete</dd>
+        <dt>Visual specification</dt><dd>complete</dd>
+        <dt>References</dt><dd>complete</dd>
+        <dt>Candidates (8–12)</dt><dd>complete</dd>
+        <dt>Validation &amp; renders</dt><dd>complete</dd>
+        <dt>Critiques</dt><dd>complete</dd>
+        <dt>Repair rounds (≤3)</dt><dd>complete</dd>
+        <dt>Finalists retained</dt><dd>3</dd>
+        <dt>Provisional canonical result</dt><dd>selected</dd>
+        <dt>Experiment report</dt><dd>complete</dd>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Validation &amp; publication</h2>
+      <dl class="status-list">
+        <dt>Deterministic validation</dt><dd>passing for all retained candidates</dd>
+        <dt>Publication checks</dt><dd>pending owner review of finalists</dd>
+        <dt>Secret scan</dt><dd>last run: before this deployment</dd>
+        <dt>Bulk corpus generation</dt><dd>not started (by design)</dd>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Current hold point</h2>
+      <p>Phase 0 and Phase 1 setup are complete. The project is paused for
+      owner review: repositories, protections, site, pipeline and the first
+      full experiment cycle are done. Nothing proceeds — no scaling, no bulk
+      generation, no further model spend — until the owner approves.</p>
+    </section>
+
+    <section>
+      <h2>Major unresolved risks</h2>
+      <ul>
+        <li><strong>Benchmark contamination:</strong> models may have seen the
+            prompt or its results in training data; effects are measured and
+            disclosed, not assumed away.</li>
+        <li><strong>Image generation:</strong> the image-generation path
+            (ChatGPT OAuth) is not available in the current session; visual
+            references may need to be produced via CLI tooling or procedural
+            construction.</li>
+        <li><strong>Licensing uncertainty:</strong> copyright status of
+            AI-generated content varies by jurisdiction; assets are published
+            CC0 with caveats (see <a href="docs/licensing.md">licensing</a>).</li>
+        <li><strong>Budget:</strong> low-budget operation; premium model calls
+            are rationed and logged.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>Better Pelicans · <a href="https://github.com/BetterPelicans" rel="noopener">github.com/BetterPelicans</a></p>
+  </footer>
+</body>
+</html>

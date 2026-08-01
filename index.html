@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Better Pelicans — an open experiment in compositional SVG generation</title>
+  <meta name="description" content="Better Pelicans is an open experiment in compositional SVG generation, iterative visual repair, benchmark contamination and generalization.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav aria-label="Main">
+      <a class="brand" href="index.html">Better Pelicans</a>
+      <ul>
+        <li><a href="methodology.html">Methodology</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="status.html">Status</a></li>
+        <li><a href="https://github.com/BetterPelicans" rel="noopener">GitHub</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <h1>Better Pelicans</h1>
+      <p class="tagline">An open experiment in compositional SVG generation, iterative visual repair, benchmark contamination and generalization.</p>
+      <p class="status-line"><a href="status.html">Experiment 0001 is in progress</a>. No results are claimed yet; everything here is provisional.</p>
+    </section>
+
+    <section>
+      <h2>The benchmark</h2>
+      <p>Since October 2024, a modest sentence has served as an informal probe of
+      text-to-SVG models:</p>
+      <blockquote>Generate an SVG of a pelican riding a bicycle.</blockquote>
+      <p>The prompt is easy to read and hard to satisfy: it requires two distinct
+      objects, a mechanically plausible interaction between them, correct depth
+      ordering, and a valid, standalone, editable vector file. It was popularized
+      by Simon Willison (<a href="https://simonwillison.net/2024/Oct/25/pelicans-on-a-bicycle/">blog</a>,
+      <a href="https://github.com/simonw/pelican-bicycle">benchmark repository</a>).
+      See <a href="docs/benchmark.md">docs/benchmark.md</a> for the canonical
+      wording, variants and sources.</p>
+    </section>
+
+    <section>
+      <h2>The experiment</h2>
+      <p>Better Pelicans studies what it takes to go from that prompt to a
+      genuinely good SVG: not just a valid file, but a recognizable pelican,
+      a coherent bicycle, and an unambiguous act of riding.</p>
+      <p>Because the benchmark has been public since 2024, models may well have
+      seen it — or its results — during training. That makes this prompt a useful
+      lens on <strong>benchmark contamination</strong>, alongside composition,
+      iterative repair and generalization. We measure what we can and disclose
+      what we cannot.</p>
+      <p>Everything is reproducible: fixed prompts and settings, deterministic
+      validation, local rendering, specialist critiques, and local repair
+      rounds. Every artifact is hashed and logged.</p>
+    </section>
+
+    <section>
+      <h2>Methodology in brief</h2>
+      <ol class="method-list">
+        <li><strong>Generate</strong> candidates with documented prompts and settings.</li>
+        <li><strong>Validate</strong> deterministically: XML, safety, size, complexity.</li>
+        <li><strong>Render</strong> at 256×256, 1024×1024 and transparent variants.</li>
+        <li><strong>Critique</strong> with specialist rubrics — anatomy, mechanics, interaction, composition, editability.</li>
+        <li><strong>Repair</strong> locally, at most three rounds per finalist.</li>
+        <li><strong>Publish</strong> only what passes the <a href="docs/publication-checklist.md">publication checklist</a>.</li>
+      </ol>
+      <p><a href="methodology.html">Full methodology</a></p>
+    </section>
+
+    <section>
+      <h2>Gallery</h2>
+      <p>The gallery is <a href="gallery.html">provisional</a>. Nothing has been published as a result yet.</p>
+    </section>
+
+    <section>
+      <h2>Contact</h2>
+      <p>Questions, corrections, and reports of pelican-related mishaps:
+      <a href="mailto:bluezoidberg@agentmail.to">bluezoidberg@agentmail.to</a>.
+      Security issues: see <a href="SECURITY.md">SECURITY.md</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Better Pelicans · <a href="https://github.com/BetterPelicans" rel="noopener">github.com/BetterPelicans</a> ·
+    code MIT · generated assets: see <a href="docs/licensing.md">licensing</a> ·
+    <a href="docs/provenance.md">provenance &amp; disclosure</a></p>
+  </footer>
+</body>
+</html>
