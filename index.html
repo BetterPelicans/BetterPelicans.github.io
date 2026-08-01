@@ -3,91 +3,44 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Better Pelicans — an open experiment in compositional SVG generation</title>
-  <meta name="description" content="Better Pelicans is an open experiment in compositional SVG generation, iterative visual repair, benchmark contamination and generalization.">
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/site.css">
+  <title>Better Pelicans — coming soon</title>
+  <meta name="description" content="Better Pelicans is an open experiment in compositional SVG generation, iterative visual repair, benchmark contamination and generalization. The site opens soon.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b6e5c'/%3E%3Ccircle cx='32' cy='24' r='9' fill='%23faf9f6'/%3E%3Cpath d='M23 26 q-8 -2 -9 -9 q8 3 9 9z' fill='%23e8a13c'/%3E%3Cpath d='M32 33 L24 46 L20 44 L27 33z' fill='%23faf9f6'/%3E%3Ccircle cx='47' cy='46' r='7' fill='none' stroke='%23faf9f6' stroke-width='3'/%3E%3Ccircle cx='21' cy='46' r='7' fill='none' stroke='%23faf9f6' stroke-width='3'/%3E%3Cpath d='M28 46 L40 46' stroke='%23faf9f6' stroke-width='3'/%3E%3Cpath d='M34 46 L38 33 L33 30' fill='none' stroke='%23faf9f6' stroke-width='3'/%3E%3C/svg%3E">
+  <style>
+    :root { --bg: #faf9f6; --fg: #1c1b18; --muted: #5c5a54; --accent: #0b6e5c; --border: #d9d6cf; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+           line-height: 1.6; color: var(--fg); background: var(--bg);
+           min-height: 100vh; display: flex; flex-direction: column; }
+    main { flex: 1; max-width: 40rem; margin: 0 auto; padding: 4rem 1.5rem 2rem; }
+    .mark { width: 72px; height: 72px; margin-bottom: 1rem; }
+    h1 { font-size: 1.9rem; margin: 0 0 0.5rem; }
+    p { color: var(--muted); }
+    .status { display: inline-block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+              letter-spacing: 0.06em; color: var(--accent); border: 1px solid var(--accent);
+              border-radius: 999px; padding: 0.15rem 0.7rem; margin-bottom: 1rem; }
+    a { color: var(--accent); }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    footer { border-top: 1px solid var(--border); padding: 1.25rem 1rem; text-align: center;
+             color: var(--muted); font-size: 0.9rem; }
+    footer a { color: var(--muted); }
+  </style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
-    <nav aria-label="Main">
-      <a class="brand" href="index.html">Better Pelicans</a>
-      <ul>
-        <li><a href="methodology.html">Methodology</a></li>
-        <li><a href="gallery.html">Gallery</a></li>
-        <li><a href="status.html">Status</a></li>
-        <li><a href="https://github.com/BetterPelicans" rel="noopener">GitHub</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main id="main">
-    <section class="hero">
-      <h1>Better Pelicans</h1>
-      <p class="tagline">An open experiment in compositional SVG generation, iterative visual repair, benchmark contamination and generalization.</p>
-      <p class="status-line"><a href="status.html">Experiment 0001 is complete</a> — a provisional canonical result is in the <a href="gallery.html">gallery</a>. Publication is provisional pending owner review; no claims about model training influence are made.</p>
-    </section>
-
-    <section>
-      <h2>The benchmark</h2>
-      <p>Since October 2024, a modest sentence has served as an informal probe of
-      text-to-SVG models:</p>
-      <blockquote>Generate an SVG of a pelican riding a bicycle.</blockquote>
-      <p>The prompt is easy to read and hard to satisfy: it requires two distinct
-      objects, a mechanically plausible interaction between them, correct depth
-      ordering, and a valid, standalone, editable vector file. It was popularized
-      by Simon Willison (<a href="https://simonwillison.net/2024/Oct/25/pelicans-on-a-bicycle/">blog</a>,
-      <a href="https://github.com/simonw/pelican-bicycle">benchmark repository</a>).
-      See <a href="docs/benchmark.md">docs/benchmark.md</a> for the canonical
-      wording, variants and sources.</p>
-    </section>
-
-    <section>
-      <h2>The experiment</h2>
-      <p>Better Pelicans studies what it takes to go from that prompt to a
-      genuinely good SVG: not just a valid file, but a recognizable pelican,
-      a coherent bicycle, and an unambiguous act of riding.</p>
-      <p>Because the benchmark has been public since 2024, models may well have
-      seen it — or its results — during training. That makes this prompt a useful
-      lens on <strong>benchmark contamination</strong>, alongside composition,
-      iterative repair and generalization. We measure what we can and disclose
-      what we cannot.</p>
-      <p>Everything is reproducible: fixed prompts and settings, deterministic
-      validation, local rendering, specialist critiques, and local repair
-      rounds. Every artifact is hashed and logged.</p>
-    </section>
-
-    <section>
-      <h2>Methodology in brief</h2>
-      <ol class="method-list">
-        <li><strong>Generate</strong> candidates with documented prompts and settings.</li>
-        <li><strong>Validate</strong> deterministically: XML, safety, size, complexity.</li>
-        <li><strong>Render</strong> at 256×256, 1024×1024 and transparent variants.</li>
-        <li><strong>Critique</strong> with specialist rubrics — anatomy, mechanics, interaction, composition, editability.</li>
-        <li><strong>Repair</strong> locally, at most three rounds per finalist.</li>
-        <li><strong>Publish</strong> only what passes the <a href="docs/publication-checklist.md">publication checklist</a>.</li>
-      </ol>
-      <p><a href="methodology.html">Full methodology</a></p>
-    </section>
-
-    <section>
-      <h2>Gallery</h2>
-      <p>The gallery is <a href="gallery.html">provisional</a> and currently holds the first experiment's provisional canonical result, pending owner review.</p>
-    </section>
-
-    <section>
-      <h2>Contact</h2>
-      <p>Questions, corrections, and reports of pelican-related mishaps:
-      <a href="mailto:hello@betterpelicans.com">hello@betterpelicans.com</a>.
-      Security issues: see <a href="SECURITY.md">SECURITY.md</a>.</p>
-    </section>
+  <main>
+    <img class="mark" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b6e5c'/%3E%3Ccircle cx='32' cy='24' r='9' fill='%23faf9f6'/%3E%3Cpath d='M23 26 q-8 -2 -9 -9 q8 3 9 9z' fill='%23e8a13c'/%3E%3Cpath d='M32 33 L24 46 L20 44 L27 33z' fill='%23faf9f6'/%3E%3Ccircle cx='47' cy='46' r='7' fill='none' stroke='%23faf9f6' stroke-width='3'/%3E%3Ccircle cx='21' cy='46' r='7' fill='none' stroke='%23faf9f6' stroke-width='3'/%3E%3Cpath d='M28 46 L40 46' stroke='%23faf9f6' stroke-width='3'/%3E%3Cpath d='M34 46 L38 33 L33 30' fill='none' stroke='%23faf9f6' stroke-width='3'/%3E%3C/svg%3E" alt="Better Pelicans mark">
+    <span class="status">Coming soon</span>
+    <h1>Better Pelicans</h1>
+    <p>An open experiment in compositional SVG generation, iterative visual repair,
+    benchmark contamination and generalization.</p>
+    <p>The first experiment is complete, and the site will open to the public once
+    it passes owner review. Until then, the experiment results remain private.</p>
+    <p>Questions: <a href="mailto:hello@betterpelicans.com">hello@betterpelicans.com</a> ·
+    <a href="https://github.com/BetterPelicans" rel="noopener">github.com/BetterPelicans</a></p>
   </main>
-
   <footer>
-    <p>Better Pelicans · <a href="https://github.com/BetterPelicans" rel="noopener">github.com/BetterPelicans</a> ·
-    code MIT · generated assets: see <a href="docs/licensing.md">licensing</a> ·
-    <a href="docs/provenance.md">provenance &amp; disclosure</a></p>
+    <p>Better Pelicans · code MIT · generated assets: see the repository</p>
   </footer>
 </body>
 </html>

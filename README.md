@@ -32,9 +32,10 @@ with a provisional canonical result in the gallery pending owner review.
 
 ## Repository layout
 
-- `index.html`, `status.html`, `gallery.html`, `methodology.html` — the public site
+- `index.html` — coming-soon gate (the site is not yet public)
+- `s/` — full site pages and assets (non-disclosed path; opens when the
+  experiment passes owner review)
 - `docs/` — provenance, licensing and benchmark documentation
-- `assets/` — site assets (SVG only; no embedded raster images)
 
 Raw generations, prompts, critiques and failed candidates live in the private
 `betterpelicans-lab` repository and are never automatically copied here. Every
