@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Methodology — Better Pelicans</title>
-  <meta name="description" content="How Better Pelicans generates, validates, critiques and repairs SVG candidates.">
+  <meta name="description" content="How Better Pelicans generates, validates, critiques and repairs SVG candidates — with more rigor than the subject arguably deserves.">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/site.css">
 </head>
@@ -27,11 +27,12 @@
 
     <section>
       <h2>Pipeline</h2>
-      <p>The pipeline is deliberately boring: each stage is a small script with
-      a defined input and output. Stages: <code>generate</code> →
-      <code>render</code> → <code>validate</code> → <code>critique</code> →
-      <code>repair</code> → <code>publish</code>. The code lives in the private
-      laboratory; this site documents behavior, not internals.</p>
+      <p>The pipeline is deliberately boring, which we consider a feature:
+      each stage is a small script with a defined input and output. Stages:
+      <code>generate</code> → <code>render</code> → <code>validate</code> →
+      <code>critique</code> → <code>repair</code> → <code>publish</code>.
+      The code lives in the private laboratory; this site documents behavior,
+      not internals. (The internals are mostly crying.)</p>
     </section>
 
     <section>
@@ -40,12 +41,14 @@
       benchmark wording), an expanded visual specification, and recorded model
       settings. Candidates are independent: the first batch is 8–12 samples
       from the same prompt/settings. Repairs are localized edits of an existing
-      candidate, tracked by parent ID.</p>
+      candidate, tracked by parent ID — think of it as art therapy with
+      version control.</p>
     </section>
 
     <section>
       <h2>Deterministic validation</h2>
-      <p>Every candidate is checked programmatically:</p>
+      <p>Every candidate is checked programmatically, because machines judge
+      birds without mercy:</p>
       <ul>
         <li>well-formed XML; valid SVG root and namespace;</li>
         <li>no JavaScript, event handlers, external requests, embedded rasters,
@@ -61,7 +64,8 @@
     <section>
       <h2>Critique rubric</h2>
       <p>Candidates are scored separately on each specialist axis — never
-      collapsed into a single unexplained number:</p>
+      collapsed into a single unexplained number, because one number would be
+      too easy and also too scary:</p>
       <ul>
         <li>prompt compliance</li>
         <li>pelican recognizability</li>
@@ -79,27 +83,30 @@
       </ul>
       <p>Scores are recorded with written defects. Critiques are vision-assisted
       and logged; contradictory visual findings are resolved deterministically
-      where possible.</p>
+      where possible. The beak is always the hardest part.</p>
     </section>
 
     <section>
       <h2>Repair</h2>
       <p>Repairs are localized edits to a candidate (a beak, a pedal, a wheel),
       applied with the same toolchain. Each repair is a new candidate with a
-      parent pointer. A maximum of three repair rounds per finalist.</p>
+      parent pointer. A maximum of three repair rounds per finalist — we believe
+      in second chances, not fourth ones.</p>
     </section>
 
     <section>
       <h2>Publication</h2>
       <p>Nothing enters this site without passing the
       <a href="../docs/publication-checklist.md">publication checklist</a> and a
-      secret scan. Provenance for every asset is documented in
+      secret scan. The pelicans are screened; so is the code. Provenance for
+      every asset is documented in
       <a href="../docs/provenance.md">provenance.md</a>.</p>
     </section>
   </main>
 
   <footer>
     <p>Better Pelicans · <a href="https://github.com/BetterPelicans" rel="noopener">github.com/BetterPelicans</a></p>
+    <p>No actual pelicans were harmed, consulted, or asked to ride anything.</p>
   </footer>
 </body>
 </html>

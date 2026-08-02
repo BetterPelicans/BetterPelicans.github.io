@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Status — Better Pelicans</title>
-  <meta name="description" content="Infrastructure, pipeline, experiment and publication status for Better Pelicans.">
+  <meta name="description" content="Infrastructure, pipeline, experiment and publication status for Better Pelicans — a surprisingly complete operation for a surprisingly silly subject.">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/site.css">
 </head>
@@ -24,14 +24,14 @@
 
   <main id="main">
     <h1>Status</h1>
-    <p class="updated">Last updated: <time id="last-updated">2026-08-01</time></p>
+    <p class="updated">Last updated: <time id="last-updated">2026-08-02</time></p>
 
     <section>
       <h2>Infrastructure</h2>
       <dl class="status-list">
         <dt>GitHub organization</dt><dd>operational</dd>
         <dt>Public repository</dt><dd>operational</dd>
-        <dt>Laboratory repository</dt><dd>operational (private)</dd>
+        <dt>Laboratory repository</dt><dd>operational (private, and slightly disorganized)</dd>
         <dt>Site deployment</dt><dd>operational (GitHub Pages)</dd>
         <dt>Custom domain</dt><dd>pending DNS configuration by owner</dd>
       </dl>
@@ -71,7 +71,7 @@
         <dt>Deterministic validation</dt><dd>passing for all retained candidates</dd>
         <dt>Publication checks</dt><dd>pending owner review of finalists</dd>
         <dt>Secret scan</dt><dd>last run: before this deployment</dd>
-        <dt>Bulk corpus generation</dt><dd>not started (by design)</dd>
+        <dt>Bulk corpus generation</dt><dd>not started (by design, and by budget)</dd>
       </dl>
     </section>
 
@@ -80,30 +80,32 @@
       <p>Phase 0 and Phase 1 setup are complete. The project is paused for
       owner review: repositories, protections, site, pipeline and the first
       full experiment cycle are done. Nothing proceeds — no scaling, no bulk
-      generation, no further model spend — until the owner approves.</p>
+      generation, no further model spend — until the owner approves. We are,
+      for the moment, a fully operational project with nothing to do but wait
+      for a thumbs-up. It's fine. The pelican is patient.</p>
     </section>
 
     <section>
       <h2>Major unresolved risks</h2>
       <ul>
         <li><strong>Benchmark contamination:</strong> models may have seen the
-            prompt or its results in training data; effects are measured and
-            disclosed, not assumed away.</li>
-        <li><strong>Image generation:</strong> the image-generation path
-            (ChatGPT OAuth) is not available in the current session; visual
-            references may need to be produced via CLI tooling or procedural
-            construction.</li>
+            prompt or its results in training data. Our pelican may have
+            cheated; we can't rule it out, so we measure what we can and
+            disclose what we can't.</li>
+        <li><strong>Our own seriousness:</strong> the project applies academic
+            rigor to a bird on a bicycle. We are aware. We are not stopping.</li>
         <li><strong>Licensing uncertainty:</strong> copyright status of
             AI-generated content varies by jurisdiction; assets are published
             CC0 with caveats (see <a href="../docs/licensing.md">licensing</a>).</li>
-        <li><strong>Budget:</strong> low-budget operation; premium model calls
-            are rationed and logged.</li>
+        <li><strong>Budget:</strong> low-budget operation best described as
+            "coffee money"; premium model calls are rationed and logged.</li>
       </ul>
     </section>
   </main>
 
   <footer>
     <p>Better Pelicans · <a href="https://github.com/BetterPelicans" rel="noopener">github.com/BetterPelicans</a></p>
+    <p>No actual pelicans were harmed, consulted, or asked to ride anything.</p>
   </footer>
 </body>
 </html>
