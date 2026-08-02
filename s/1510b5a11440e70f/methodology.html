@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Methodology — Better Pelicans</title>
-  <meta name="description" content="How Better Pelicans generates, validates, critiques and repairs SVG candidates — with more rigor than the subject arguably deserves.">
+  <title>How we test — Better Pelicans</title>
+  <meta name="description" content="The procedure behind the pelican-bicycle test: fixed prompt, deterministic validation, specialist critique, limited repairs, then publication.">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/site.css">
 </head>
@@ -14,7 +14,7 @@
     <nav aria-label="Main">
       <a class="brand" href="index.html">Better Pelicans</a>
       <ul>
-        <li><a href="methodology.html" aria-current="page">Methodology</a></li>
+        <li><a href="methodology.html" aria-current="page">How we test</a></li>
         <li><a href="gallery.html">Gallery</a></li>
         <li><a href="status.html">Status</a></li>
         <li><a href="https://github.com/BetterPelicans" rel="noopener">GitHub</a></li>
@@ -23,83 +23,50 @@
   </header>
 
   <main id="main">
-    <h1>Methodology</h1>
-
-    <section>
-      <h2>Pipeline</h2>
-      <p>The pipeline is deliberately boring, which we consider a feature:
-      each stage is a small script with a defined input and output. Stages:
-      <code>generate</code> → <code>render</code> → <code>validate</code> →
-      <code>critique</code> → <code>repair</code> → <code>publish</code>.
-      The code lives in the private laboratory; this site documents behavior,
-      not internals. (The internals are mostly crying.)</p>
-    </section>
+    <h1>How we test</h1>
+    <p>The whole operation is one test, run carefully and repeated often:
+    a fixed prompt, fixed settings, and a strict path from generation to
+    publication. Everything else is bookkeeping. The code lives in the
+    private laboratory; this page documents behavior, not internals.</p>
 
     <section>
       <h2>Generation</h2>
-      <p>Each candidate is generated with a fixed source prompt (the canonical
-      benchmark wording), an expanded visual specification, and recorded model
-      settings. Candidates are independent: the first batch is 8–12 samples
-      from the same prompt/settings. Repairs are localized edits of an existing
-      candidate, tracked by parent ID — think of it as art therapy with
-      version control.</p>
+      <p>Each candidate starts from the canonical benchmark wording plus an
+      expanded visual specification, with model settings recorded. The first
+      batch is 8–12 independent samples from the same prompt and settings.</p>
     </section>
 
     <section>
-      <h2>Deterministic validation</h2>
-      <p>Every candidate is checked programmatically, because machines judge
-      birds without mercy:</p>
-      <ul>
-        <li>well-formed XML; valid SVG root and namespace;</li>
-        <li>no JavaScript, event handlers, external requests, embedded rasters,
-            external fonts or stylesheets;</li>
-        <li>reasonable file size and element/path counts;</li>
-        <li>usable <code>viewBox</code>;</li>
-        <li>successful deterministic rendering at 256×256, 1024×1024 and a
-            transparent-background variant;</li>
-        <li>reproducible hashes of the SVG and rendered output.</li>
-      </ul>
+      <h2>Deterministic checks</h2>
+      <p>Every candidate is checked programmatically: well-formed XML with a
+      valid SVG root, no scripts or external requests, no embedded rasters or
+      external fonts, sane file size and element counts, a usable
+      <code>viewBox</code>, clean renders at 256×256, 1024×1024 and
+      transparent, and reproducible hashes of everything.</p>
     </section>
 
     <section>
-      <h2>Critique rubric</h2>
-      <p>Candidates are scored separately on each specialist axis — never
-      collapsed into a single unexplained number, because one number would be
-      too easy and also too scary:</p>
-      <ul>
-        <li>prompt compliance</li>
-        <li>pelican recognizability</li>
-        <li>pelican anatomy</li>
-        <li>bicycle recognizability</li>
-        <li>bicycle mechanical plausibility</li>
-        <li>bird–bicycle physical interaction</li>
-        <li>composition</li>
-        <li>visual hierarchy</li>
-        <li>aesthetic quality</li>
-        <li>SVG validity</li>
-        <li>editability</li>
-        <li>efficiency</li>
-        <li>absence of raster content</li>
-      </ul>
-      <p>Scores are recorded with written defects. Critiques are vision-assisted
-      and logged; contradictory visual findings are resolved deterministically
-      where possible. The beak is always the hardest part.</p>
+      <h2>Critique</h2>
+      <p>Candidates are scored on separate axes — prompt compliance, pelican
+      anatomy, bicycle mechanics, bird–bicycle interaction, composition,
+      editability, and a few more — with written defects, never a single
+      unexplained number. The beak is always the hardest part.</p>
     </section>
 
     <section>
       <h2>Repair</h2>
-      <p>Repairs are localized edits to a candidate (a beak, a pedal, a wheel),
-      applied with the same toolchain. Each repair is a new candidate with a
-      parent pointer. A maximum of three repair rounds per finalist — we believe
-      in second chances, not fourth ones.</p>
+      <p>Failed details (a beak, a pedal, a wheel) get localized edits with
+      the same toolchain. Each repair is a new candidate with a parent
+      pointer, forming a family tree of increasingly confident pelicans.
+      Maximum three repair rounds per finalist: we believe in second chances,
+      not fourth ones.</p>
     </section>
 
     <section>
       <h2>Publication</h2>
       <p>Nothing enters this site without passing the
-      <a href="../docs/publication-checklist.md">publication checklist</a> and a
-      secret scan. The pelicans are screened; so is the code. Provenance for
-      every asset is documented in
+      <a href="../docs/publication-checklist.md">publication checklist</a> and
+      a secret scan. Provenance for every asset is documented in
       <a href="../docs/provenance.md">provenance.md</a>.</p>
     </section>
   </main>
