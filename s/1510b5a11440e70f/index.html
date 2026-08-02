@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Better Pelicans: the absurdly rigorous AI pelican-on-a-bicycle benchmark</title>
-  <meta name="description" content="We ask AI models to draw a pelican riding a bicycle, then judge the results with absurd rigor. An open benchmark in compositional SVG generation, with a scoreboard.">
+  <title>Better Pelicans — an open collection of pelican-on-bicycle SVGs</title>
+  <meta name="description" content="An open collection of extraordinarily high-quality SVG illustrations of pelicans riding bicycles — made raster-first, traced into standalone vectors, reviewed by humans, published under CC0.">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/site.css">
 </head>
@@ -14,9 +14,12 @@
     <nav aria-label="Main">
       <a class="brand" href="index.html">Better Pelicans</a>
       <ul>
-        <li><a href="methodology.html">How we test</a></li>
         <li><a href="gallery.html">Gallery</a></li>
-        <li><a href="status.html">Status</a></li>
+        <li><a href="dataset.html">Dataset</a></li>
+        <li><a href="how-they-are-made.html">How They Are Made</a></li>
+        <li><a href="download.html">Download</a></li>
+        <li><a href="contribute.html">Contribute</a></li>
+        <li><a href="about.html">About</a></li>
       </ul>
     </nav>
   </header>
@@ -24,54 +27,72 @@
   <main id="main">
     <section class="hero">
       <h1>Better Pelicans</h1>
-      <p class="tagline">We ask AI models for a pelican riding a bicycle 🚲, then judge them with absurd rigor.</p>
-      <p class="status-line"><a href="status.html">Experiment 0001 is complete</a>, and the <a href="gallery.html">gallery</a> has its first owner-approved pelican. Training influence is unknowable.</p>
-      <p class="scoreboard">CURRENT SCOREBOARD — Pelicans generated: 2 · Pelicans published: 1 · Owners convinced: 1</p>
+      <p class="tagline">An open collection of extraordinarily high-quality SVG illustrations of pelicans riding bicycles.</p>
+      <p class="status-line">The <a href="dataset.html">pilot collection</a> is in: <a href="gallery.html">four approved pelicans</a>, eight SVGs, one very strict reviewer. The site is in preview while the collection grows.</p>
+      <p class="scoreboard">CURRENT SCOREBOARD — Pelicans generated: 11 · Pelicans approved: 4 · Owners convinced: 1</p>
     </section>
 
     <section>
-      <h2>The test</h2>
-      <p>Since October 2024, our informal text-to-SVG exam has been:</p>
-      <blockquote>Generate an SVG of a pelican riding a bicycle.</blockquote>
-      <p><a href="https://simonwillison.net/2024/Oct/25/pelicans-on-a-bicycle/">Simon Willison</a> originated the prompt in October 2024, explained its difficulty, and published the matching <a href="https://github.com/simonw/pelican-bicycle">benchmark repository</a>. He inspired this project, but he did not create or run this site and is not affiliated with it. We took the idea extremely seriously.</p>
-      <p>It tests distinct objects, plausible riding, depth, and a valid, standalone, editable SVG. See <a href="../../docs/benchmark.md">docs/benchmark.md</a> for canonical wording, variants, and sources.</p>
+      <h2>The collection</h2>
+      <p>Every SVG here starts life as a raster image, gets screened for anatomy,
+      bicycle mechanics, and composition, is traced into a genuine standalone
+      vector, rendered twice, and reviewed by a human who is hard to impress.
+      If a pelican clears all of that, it hangs in the <a href="gallery.html">gallery</a>.</p>
+      <p>Each approved pelican comes in two editions: a <strong>Visual Master</strong>
+      that keeps every highlight, and a <strong>Teaching Vector</strong> stripped
+      down to tidy shapes and fewer colors. Same pelican, two personalities.
+      <a href="how-they-are-made.html">How They Are Made</a>.</p>
     </section>
 
     <section>
-      <h2>Why this test</h2>
-      <p>A convincing result needs a recognizable pelican, a rideable bicycle, and unmistakable riding. That tests composition, physics, depth, and vector craft in one tiny file.</p>
-      <p>Because the prompt has been public since 2024, models may have seen it or its results in training. That makes <strong>benchmark contamination</strong> part of the test. Strong performance from exposed models matters; we measure what we can and state what remains unknown.</p>
+      <h2>The test that started it</h2>
+      <p>In October 2024, <a href="https://simonwillison.net/2024/Oct/25/pelicans-on-a-bicycle/">Simon Willison</a>
+      asked AI models to <em>generate an SVG of a pelican riding a bicycle</em>,
+      explained why that is surprisingly hard, and published a benchmark. He
+      inspired this project, but he did not create or run it and is not
+      affiliated with it. We took his idea extremely seriously.</p>
+      <p>The prompt has been public for a while, so models may have seen it or
+      its results in training. The pelican may have peeked at the answers. We
+      measure what we can and say plainly what we cannot.</p>
     </section>
 
     <section>
-      <h2>What counts as good</h2>
+      <h2>The rules</h2>
       <ul>
-        <li>A proper pelican — pouch, beak, dignity — on a bicycle that could roll.</li>
-        <li>Honest depth: bird on saddle, feet on pedals.</li>
-        <li>Newer models outperforming older ones.</li>
-        <li>Repairs saving near-misses, with failures recorded.</li>
-        <li>If a contamination signal exists, report it plainly.</li>
+        <li>An unmistakable pelican — pouch, beak, dignity — on a bicycle that could roll.</li>
+        <li>Feet on pedals, wing on the bar. No floating birds.</li>
+        <li>Standalone SVGs only: no rasters inside, no scripts, no tricks.</li>
+        <li>Repairs capped at three rounds. We believe in second chances, not fourth ones.</li>
+        <li>Everything CC0, hashed, and documented. If it ships, you can verify it.</li>
       </ul>
     </section>
 
     <section>
-      <h2>How we test</h2>
-      <p>One fixed prompt; documented settings; 8–12 independent candidates; deterministic validation; specialist critique; at most three repair rounds; then a publication checklist. We hash and log every artifact. Full procedure: <a href="methodology.html">How we test</a>.</p>
+      <h2>Dataset &amp; download</h2>
+      <p>Release <a href="dataset.html">pilot-0003</a> includes source rasters,
+      SVGs, previews, captions, hashes, and a machine-readable index. Individual
+      files are <a href="download.html">ready to download</a>; the tidy bulk
+      archive ships when the collection clears the review bar. It's fine. The
+      pelican is patient.</p>
     </section>
 
     <section>
-      <h2>Gallery</h2>
-      <p>The <a href="gallery.html">gallery</a> holds its first owner-approved pelican, straight from experiment 0002. More will hang as they clear the bar.</p>
+      <h2>Contribute</h2>
+      <p>Got a pelican-on-a-bicycle image that deserves the wall?
+      <a href="contribute.html">Read the rules</a> and send it to
+      <a href="mailto:hello@betterpelicans.com">hello@betterpelicans.com</a>.</p>
     </section>
 
     <section>
       <h2>Contact</h2>
-      <p>Questions, corrections, and pelican mishaps: <a href="mailto:hello@betterpelicans.com">hello@betterpelicans.com</a>. Security issues: <a href="../../SECURITY.md">SECURITY.md</a>.</p>
+      <p>Questions, corrections, and pelican mishaps:
+      <a href="mailto:hello@betterpelicans.com">hello@betterpelicans.com</a>.
+      Security issues: <a href="../../SECURITY.md">SECURITY.md</a>.</p>
     </section>
   </main>
 
   <footer>
-    <p>Better Pelicans · code MIT · generated assets: see <a href="../../docs/licensing.md">licensing</a> · <a href="../../docs/provenance.md">provenance &amp; disclosure</a></p>
+    <p>Better Pelicans · code MIT · assets <a href="../../docs/licensing.md">CC0</a> · <a href="../../docs/provenance.md">provenance &amp; disclosure</a></p>
     <p>No actual pelicans were harmed. Several SVGs did not make it.</p>
   </footer>
 </body>

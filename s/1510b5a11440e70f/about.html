@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About — Better Pelicans</title>
+  <meta name="description" content="Who we are, where the idea came from, how the project runs, and the provenance rules behind every pelican.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav aria-label="Main">
+      <a class="brand" href="index.html">Better Pelicans</a>
+      <ul>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="dataset.html">Dataset</a></li>
+        <li><a href="how-they-are-made.html">How They Are Made</a></li>
+        <li><a href="download.html">Download</a></li>
+        <li><a href="contribute.html">Contribute</a></li>
+        <li><a href="about.html" aria-current="page">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <h1>About</h1>
+
+    <section>
+      <h2>The project</h2>
+      <p>Better Pelicans is an open collection of extraordinarily high-quality
+      SVG illustrations of pelicans riding bicycles. The collection is produced
+      by a raster-first pipeline, reviewed by humans, and published openly under
+      CC0 with full provenance.</p>
+    </section>
+
+    <section>
+      <h2>Where the idea came from</h2>
+      <p>In October 2024, <a href="https://simonwillison.net/2024/Oct/25/pelicans-on-a-bicycle/">Simon Willison</a>
+      asked AI models to generate an SVG of a pelican riding a bicycle,
+      explained why that is harder than it sounds — distinct objects, plausible
+      riding, depth, a valid standalone SVG — and published the benchmark. He
+      inspired this project, but he did not create or run it and is not
+      affiliated with it. We took his idea extremely seriously — possibly too
+      seriously.</p>
+    </section>
+
+    <section>
+      <h2>Why pelicans</h2>
+      <p>It is the best test of compositional image generation we know: two
+      distinct objects, one absurd premise, and a dozen ways to fail. If the
+      pipeline works on a bird on a bike, it works on serious subjects. Also,
+      pelicans are excellent.</p>
+    </section>
+
+    <section>
+      <h2>How the project runs</h2>
+      <p>Staged experiments with review gates, recorded budgets, and a
+      coffee-money operating model. No bulk generation without sign-off; every
+      accepted pelican costs about two image generations, a pile of CPU, and
+      one very careful human review.</p>
+    </section>
+
+    <section>
+      <h2>Where things stand</h2>
+      <ul>
+        <li>Pilot release <a href="dataset.html">pilot-0003</a>: four approved pelicans, eight SVGs, CC0 — on preview in this site's <a href="gallery.html">gallery</a>.</li>
+        <li>Public release: held until the collection clears the review bar. The pelican is patient.</li>
+        <li>Infrastructure: site, pipeline, validation, and the review process are all operational.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Provenance &amp; licensing</h2>
+      <p>Every artifact carries an honest account of how it was made. Sources
+      are generated with <strong>gpt-image-2-medium</strong> via
+      <strong>OpenAI/Codex</strong>; traces are made with
+      <strong>VTracer 0.6.12</strong>; every SVG renders under resvg and
+      librsvg before shipping; every file is SHA-256-hashed. No claim of human
+      authorship is made for model-generated content. Assets are
+      <strong>CC0-1.0</strong>; code is MIT. Full policy:
+      <a href="../../docs/provenance.md">docs/provenance.md</a> ·
+      <a href="../../docs/licensing.md">docs/licensing.md</a>.</p>
+    </section>
+
+    <section>
+      <h2>Contact</h2>
+      <p><a href="mailto:hello@betterpelicans.com">hello@betterpelicans.com</a>
+      · Security issues: <a href="../../SECURITY.md">SECURITY.md</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Better Pelicans · code MIT · assets <a href="../../docs/licensing.md">CC0</a> · <a href="../../docs/provenance.md">provenance &amp; disclosure</a></p>
+    <p>No actual pelicans were harmed. Several SVGs did not make it.</p>
+  </footer>
+</body>
+</html>
