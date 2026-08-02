@@ -24,59 +24,37 @@
 
   <main id="main">
     <h1>How we test</h1>
-    <p>The whole operation is one test, run carefully and repeated often:
-    a fixed prompt, fixed settings, and a strict path from generation to
-    publication. Everything else is bookkeeping. The code lives in the
-    private laboratory; this page documents behavior, not internals.</p>
+    <p>Fixed prompt. Fixed settings. Recorded route to publication. The code lives in the private lab; this page documents behavior, not internals.</p>
 
     <section>
-      <h2>Generation</h2>
-      <p>Each candidate starts from the canonical benchmark wording plus an
-      expanded visual specification, with model settings recorded. The wording
-      is <a href="https://simonwillison.net/2024/Oct/25/pelicans-on-a-bicycle/">Simon
-      Willison's</a>, from October 2024 — he had the idea, we took it too far.
-      (Not affiliated with him in any way.) The first batch is 8–12
-      independent samples from the same prompt and settings.</p>
+      <h2>Generate</h2>
+      <p>We record canonical wording, an expanded visual spec, and settings. The wording is <a href="https://simonwillison.net/2024/Oct/25/pelicans-on-a-bicycle/">Simon Willison</a>'s October 2024 idea; we are not affiliated with him. First batches have 8–12 independent samples.</p>
     </section>
 
     <section>
-      <h2>Deterministic checks</h2>
-      <p>Every candidate is checked programmatically: well-formed XML with a
-      valid SVG root, no scripts or external requests, no embedded rasters or
-      external fonts, sane file size and element counts, a usable
-      <code>viewBox</code>, clean renders at 256×256, 1024×1024 and
-      transparent, and reproducible hashes of everything.</p>
+      <h2>Validate</h2>
+      <p>Checks: valid XML and SVG root; no scripts, external requests, rasters, or fonts; sane file and element counts; usable <code>viewBox</code>; clean 256×256, 1024×1024, and transparent renders; reproducible hashes.</p>
     </section>
 
     <section>
       <h2>Critique</h2>
-      <p>Candidates are scored on separate axes — prompt compliance, pelican
-      anatomy, bicycle mechanics, bird–bicycle interaction, composition,
-      editability, and a few more — with written defects, never a single
-      unexplained number. The beak is always the hardest part.</p>
+      <p>Written critiques cover prompt compliance, pelican anatomy, bicycle mechanics, bird–bicycle interaction, composition, and editability. The beak still wins.</p>
     </section>
 
     <section>
       <h2>Repair</h2>
-      <p>Failed details (a beak, a pedal, a wheel) get localized edits with
-      the same toolchain. Each repair is a new candidate with a parent
-      pointer, forming a family tree of increasingly confident pelicans.
-      Maximum three repair rounds per finalist: we believe in second chances,
-      not fourth ones.</p>
+      <p>Local repairs use the same toolchain. Each revision is a candidate with a parent pointer; finalists get at most three rounds.</p>
     </section>
 
     <section>
-      <h2>Publication</h2>
-      <p>Nothing enters this site without passing the
-      <a href="../docs/publication-checklist.md">publication checklist</a> and
-      a secret scan. Provenance for every asset is documented in
-      <a href="../docs/provenance.md">provenance.md</a>.</p>
+      <h2>Publish</h2>
+      <p>Publication needs the <a href="../../docs/publication-checklist.md">publication checklist</a>, a secret scan, and records in <a href="../../docs/provenance.md">provenance.md</a>.</p>
     </section>
   </main>
 
   <footer>
     <p>Better Pelicans · <a href="https://github.com/BetterPelicans" rel="noopener">github.com/BetterPelicans</a></p>
-    <p>No actual pelicans were harmed, consulted, or asked to ride anything.</p>
+    <p>No actual pelicans were harmed. Several SVGs did not make it.</p>
   </footer>
 </body>
 </html>

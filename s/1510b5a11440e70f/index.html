@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Better Pelicans — we ask AI to draw a pelican riding a bicycle</title>
-  <meta name="description" content="Better Pelicans runs one test: can a text-to-SVG model draw a pelican riding a bicycle? We judge the results with unreasonable rigor, and we publish what we find.">
+  <title>Better Pelicans: the absurdly rigorous AI pelican-on-a-bicycle benchmark</title>
+  <meta name="description" content="We ask AI models to draw a pelican riding a bicycle, then judge the results with absurd rigor. An open benchmark in compositional SVG generation, with a scoreboard.">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/site.css">
 </head>
@@ -25,90 +25,55 @@
   <main id="main">
     <section class="hero">
       <h1>Better Pelicans</h1>
-      <p class="tagline">We ask AI models to draw a pelican riding a bicycle 🚲, then we judge the results with entirely unreasonable rigor.</p>
-      <p class="status-line"><a href="status.html">Experiment 0001 is complete</a> — it produced a provisional canonical pelican, currently sitting in the <a href="gallery.html">gallery</a> awaiting the owner's blessing. We make no claims about model training influence, because we can't know and won't pretend otherwise.</p>
+      <p class="tagline">We ask AI models for a pelican riding a bicycle 🚲, then judge them with absurd rigor.</p>
+      <p class="status-line"><a href="status.html">Experiment 0001 is complete</a>. Its candidate awaits owner approval; by owner choice, the <a href="gallery.html">gallery</a> is empty. Training influence is unknowable.</p>
+      <p class="scoreboard">CURRENT SCOREBOARD — Pelicans generated: 1 · Pelicans published: 0 · Owners convinced: 0</p>
     </section>
 
     <section>
       <h2>The test</h2>
-      <p>Since October 2024, one modest sentence has served as our informal exam
-      for text-to-SVG models:</p>
+      <p>Since October 2024, our informal text-to-SVG exam has been:</p>
       <blockquote>Generate an SVG of a pelican riding a bicycle.</blockquote>
-      <p>Full credit — and full blame — goes to
-      <a href="https://simonwillison.net/2024/Oct/25/pelicans-on-a-bicycle/">Simon Willison</a>.
-      In October 2024 he asked a model to draw a pelican on a bicycle,
-      discovered it was much harder than it sounds, and wrote it up on his
-      blog with a matching
-      <a href="https://github.com/simonw/pelican-bicycle">benchmark repository</a>.
-      That post is the entire reason this project exists — no Simon, no
-      pelican benchmark, no us. To be clear: Simon didn't create this website,
-      doesn't run it, and isn't affiliated with it in any way. We simply
-      borrowed his excellent idea and took it far too seriously.</p>
-      <p>It's an easy sentence and a brutally hard drawing: two distinct
-      objects, a mechanically plausible interaction between them, correct
-      depth ordering, and a valid, standalone, editable vector file. In plain
-      terms, we're asking for a small miracle in XML. See
-      <a href="../docs/benchmark.md">docs/benchmark.md</a> for the canonical
-      wording, variants and sources.</p>
+      <p><a href="https://simonwillison.net/2024/Oct/25/pelicans-on-a-bicycle/">Simon Willison</a> originated the prompt in October 2024, explained its difficulty, and published the matching <a href="https://github.com/simonw/pelican-bicycle">benchmark repository</a>. He inspired this project, but he did not create or run this site and is not affiliated with it. We took the idea extremely seriously.</p>
+      <p>It tests distinct objects, plausible riding, depth, and a valid, standalone, editable SVG. See <a href="../../docs/benchmark.md">docs/benchmark.md</a> for canonical wording, variants, and sources.</p>
     </section>
 
     <section>
       <h2>Why this test</h2>
-      <p>Getting from that prompt to a genuinely good SVG — a recognizable
-      pelican, a coherent bicycle, and an unambiguous act of riding — is a
-      real competence test for the models: composition, physics, depth and
-      craftsmanship all at once, in a file you could open and edit.</p>
-      <p>The benchmark has been public since 2024, so models may well have
-      seen it — or its results — during training. Our pelican may have peeked
-      at the answers. That makes this prompt a useful lens on
-      <strong>benchmark contamination</strong> too: if a model that likely
-      saw the prompt draws a flawless pelican while a fresh one flails, that's
-      worth knowing. We measure what we can and disclose what we cannot.</p>
+      <p>A convincing result needs a recognizable pelican, a rideable bicycle, and unmistakable riding. That tests composition, physics, depth, and vector craft in one tiny file.</p>
+      <p>Because the prompt has been public since 2024, models may have seen it or its results in training. That makes <strong>benchmark contamination</strong> part of the test. Strong performance from exposed models matters; we measure what we can and state what remains unknown.</p>
     </section>
 
     <section>
-      <h2>What we hope to see</h2>
-      <p>The hoped-for results are specific:</p>
+      <h2>What counts as good</h2>
       <ul>
-        <li>A pelican that reads as a pelican — pouch, beak, dignity — on a bicycle that could actually roll.</li>
-        <li>Bird and bike sharing a scene with honest depth: bird on the saddle, feet on the pedals.</li>
-        <li>Newer models beating older ones, a sign the field is actually improving.</li>
-        <li>Repair rounds turning near-misses into keepers — and an honest record of the ones we can't save.</li>
-        <li>A visible contamination signal, if one exists. If the models that likely saw the prompt do suspiciously well, we'll say so out loud.</li>
+        <li>A proper pelican — pouch, beak, dignity — on a bicycle that could roll.</li>
+        <li>Honest depth: bird on saddle, feet on pedals.</li>
+        <li>Newer models outperforming older ones.</li>
+        <li>Repairs saving near-misses, with failures recorded.</li>
+        <li>If a contamination signal exists, report it plainly.</li>
       </ul>
     </section>
 
     <section>
       <h2>How we test</h2>
-      <p>Fixed prompt, documented settings, 8–12 independent candidates,
-      deterministic validation, specialist critique, up to three repair
-      rounds, and only then the publication checklist. Every artifact is
-      hashed and logged; future archaeologists will love us. The full
-      procedure is on the <a href="methodology.html">How we test</a> page.</p>
+      <p>One fixed prompt; documented settings; 8–12 independent candidates; deterministic validation; specialist critique; at most three repair rounds; then a publication checklist. We hash and log every artifact. Full procedure: <a href="methodology.html">How we test</a>.</p>
     </section>
 
     <section>
       <h2>Gallery</h2>
-      <p>The gallery is <a href="gallery.html">provisional</a> and currently
-      holds the first experiment's hard-won canonical pelican, pending owner
-      review. More may join it once we convince the owner we're not
-      embarrassing ourselves.</p>
+      <p>The <a href="gallery.html">gallery</a> is empty by owner choice. Results appear only after approval.</p>
     </section>
 
     <section>
       <h2>Contact</h2>
-      <p>Questions, corrections, and reports of pelican-related mishaps — all
-      are welcome, and we suspect the last category will be the longest:
-      <a href="mailto:hello@betterpelicans.com">hello@betterpelicans.com</a>.
-      Security issues: see <a href="../SECURITY.md">SECURITY.md</a>.</p>
+      <p>Questions, corrections, and pelican mishaps: <a href="mailto:hello@betterpelicans.com">hello@betterpelicans.com</a>. Security issues: <a href="../../SECURITY.md">SECURITY.md</a>.</p>
     </section>
   </main>
 
   <footer>
-    <p>Better Pelicans · <a href="https://github.com/BetterPelicans" rel="noopener">github.com/BetterPelicans</a> ·
-    code MIT · generated assets: see <a href="../docs/licensing.md">licensing</a> ·
-    <a href="../docs/provenance.md">provenance &amp; disclosure</a></p>
-    <p>No actual pelicans were harmed, consulted, or asked to ride anything.</p>
+    <p>Better Pelicans · <a href="https://github.com/BetterPelicans" rel="noopener">github.com/BetterPelicans</a> · code MIT · generated assets: see <a href="../../docs/licensing.md">licensing</a> · <a href="../../docs/provenance.md">provenance &amp; disclosure</a></p>
+    <p>No actual pelicans were harmed. Several SVGs did not make it.</p>
   </footer>
 </body>
 </html>
