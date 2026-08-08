@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>Wildheart Explorer</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7d5cff"/>
+      <stop offset="1" stop-color="#4d2ad0"/>
+    </linearGradient>
+  </defs>
+  <rect x="3" y="3" width="58" height="58" rx="18" fill="url(#bg)"/>
+  <path d="M18 41V22c0-3 2-5 5-5h18c3 0 5 2 5 5v19h-7V34H25v7Zm7-13h14v-5H25Z" fill="#fff"/>
+  <circle cx="49" cy="45" r="5" fill="#ffd84a"/>
+</svg>

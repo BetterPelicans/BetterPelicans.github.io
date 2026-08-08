@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <meta name="theme-color" content="#88c57a" />
+  <title>Wildheart Explorer</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./src/styles.css" />
+</head>
+<body>
+<div id="loading"><div class="loadingCard"><div class="spinner"></div><b>Growing the world…</b><div style="font-size:13px;opacity:.65;margin-top:6px">Loading the 3D engine and building biomes.</div></div></div>
+<div id="startScreen" class="hidden">
+  <div class="shell">
+    <h1>Wildheart Explorer</h1>
+    <p class="tag">Explore four biomes, collect diamonds, grow your pet pack, and dash through pesky mobs.</p>
+    <p id="buildMarker" class="buildMarker">Build 2026.08.08.4 · screen-direction controls</p>
+    <div class="sectionTitle">Choose your explorer</div>
+    <div class="cards" id="animalChoices">
+      <button class="pick selected" data-animal="fox"><span class="emoji">🦊</span><b>Fox</b></button>
+      <button class="pick" data-animal="bunny"><span class="emoji">🐰</span><b>Bunny</b></button>
+      <button class="pick" data-animal="deer"><span class="emoji">🦌</span><b>Deer</b></button>
+      <button class="pick" data-animal="bear"><span class="emoji">🐻</span><b>Bear</b></button>
+    </div>
+    <div class="sectionTitle">Choose your starter pet</div>
+    <div class="cards" id="petChoices">
+      <button class="pick selected" data-pet="puppy"><span class="emoji">🐶</span><b>Puppy</b></button>
+      <button class="pick" data-pet="kitty"><span class="emoji">🐱</span><b>Kitty</b></button>
+      <button class="pick" data-pet="chick"><span class="emoji">🐥</span><b>Chick</b></button>
+      <button class="pick" data-pet="hedgehog"><span class="emoji">🦔</span><b>Hedgehog</b></button>
+    </div>
+    <button id="startBtn">Start exploring</button>
+    <p class="note">Desktop: WASD / arrow keys to move, Space to dash. iPad/iPhone: use the left thumb stick and hold Dash to run faster. The camera follows behind the explorer, so forward always means the way the explorer is facing.</p>
+  </div>
+</div>
+<div id="hud" class="hidden">
+  <div class="topRow"><div class="hudGroup"><div class="pill">💎 <span id="diamondCount">0</span></div><div class="pill">🐾 <span id="petCount">1</span></div><div class="pill biome" id="biomeName">Meadow</div></div><div class="hudGroup"><button class="hudBtn" id="shopBtn">Pet Shop</button><button class="hudBtn" id="resetBtn">Restart</button></div></div>
+  <div id="toast">Diamond collected!</div>
+  <div id="joystick" aria-label="Movement joystick" role="application"><div class="stick" id="stick"></div></div>
+  <button id="dash" aria-label="Hold to dash">DASH</button>
+  <div id="desktopHint">WASD / Arrows · Space = Dash · Run into mobs</div>
+</div>
+<div id="shopShade" class="hidden"><div class="shop"><div class="shopHead"><div><h2>Pet Shop</h2><div style="font-size:13px;opacity:.65">Spend diamonds to add another follower.</div></div><button class="close" id="shopClose">✕</button></div><div class="shopGrid" id="shopGrid"></div></div></div>
+<script type="module" src="./src/game.js?v=20260808-4"></script>
+</body>
+</html>
