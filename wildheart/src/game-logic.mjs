@@ -1,6 +1,10 @@
 export const PLAYER_SPEED = 7.2;
 export const PLAYER_TURN_SPEED = 3.8;
-export const DASH_SPEED = 15;
+export const DASH_SPEED = 18;
+export const DASH_MIN_SPEED = 11;
+export const DASH_ENERGY_MAX = 100;
+export const DASH_ENERGY_DRAIN = 44;
+export const DASH_ENERGY_RECOVERY = 24;
 export const DASH_HIT_RADIUS = 1.25;
 
 export function clamp(value, min, max) {
@@ -12,6 +16,11 @@ export function normalizeInput(x, y) {
   if (length < 0.0001) return { x: 0, y: 0 };
   const scale = Math.min(1, 1 / length);
   return { x: x * scale, y: y * scale };
+}
+
+/** Dash preserves horizontal steering but always drives along the current facing. */
+export function dashInput(input, dashing) {
+  return dashing ? { x: input.x, y: 1 } : { x: input.x, y: input.y };
 }
 
 /** Converts a screen-space input vector into world X/Z movement around a heading. */
@@ -58,8 +67,18 @@ export function movementDelta(direction, speed, dt) {
   };
 }
 
-export function speedForInput(dashing, normalSpeed = PLAYER_SPEED) {
-  return dashing ? DASH_SPEED : normalSpeed;
+export function dashSpeedForEnergy(energy, maxEnergy = DASH_ENERGY_MAX) {
+  const ratio = maxEnergy > 0 ? clamp(energy / maxEnergy, 0, 1) : 0;
+  return DASH_MIN_SPEED + (DASH_SPEED - DASH_MIN_SPEED) * ratio;
+}
+
+export function updateDashEnergy(energy, dashHeld, dt, maxEnergy = DASH_ENERGY_MAX) {
+  const change = (dashHeld ? -DASH_ENERGY_DRAIN : DASH_ENERGY_RECOVERY) * Math.max(0, dt);
+  return clamp(energy + change, 0, maxEnergy);
+}
+
+export function speedForInput(dashing, normalSpeed = PLAYER_SPEED, dashEnergy = DASH_ENERGY_MAX) {
+  return dashing ? dashSpeedForEnergy(dashEnergy) : normalSpeed;
 }
 
 export function dashHitsTarget(start, end, target, radius = DASH_HIT_RADIUS) {

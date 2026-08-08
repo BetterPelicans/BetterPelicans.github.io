@@ -2,19 +2,22 @@ import * as THREE from '../vendor/three.module.js';
 import { GLTFLoader } from '../vendor/loaders/GLTFLoader.js';
 import { clone as cloneSkeleton } from '../vendor/utils/SkeletonUtils.js';
 import {
+  DASH_ENERGY_MAX,
   DASH_HIT_RADIUS,
   DASH_SPEED,
   PLAYER_SPEED,
   PLAYER_TURN_SPEED,
   cameraFollowOffset,
   dashHitsTarget,
+  dashInput,
   forwardForHeading,
   movementDelta,
   petWalkPhase,
   steerHeading,
   speedForInput,
   turnInputFromScreenX,
-} from './game-logic.mjs?v=20260808-4';
+  updateDashEnergy,
+} from './game-logic.mjs?v=v5';
 
 const $ = (selector) => document.querySelector(selector);
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -43,6 +46,7 @@ let selectedPet = 'puppy';
 let started = false;
 let diamonds = 0;
 let dashPulse = 0;
+let dashEnergy = DASH_ENERGY_MAX;
 let mobDefeatCount = 0;
 let scene;
 let camera;
@@ -597,9 +601,20 @@ function addPet(kind, starter = false) {
   updateHUD();
 }
 
+function updateEnergyHUD() {
+  const bar = $('#energyBar');
+  const fill = $('#energyFill');
+  if (!bar || !fill) return;
+  const percentage = (dashEnergy / DASH_ENERGY_MAX) * 100;
+  fill.style.width = `${percentage}%`;
+  bar.setAttribute('aria-valuenow', dashEnergy.toFixed(0));
+  bar.classList.toggle('low', dashEnergy <= DASH_ENERGY_MAX * 0.24);
+}
+
 function updateHUD() {
   $('#diamondCount').textContent = diamonds;
   $('#petCount').textContent = pets.length;
+  updateEnergyHUD();
 }
 
 function biomeAt(x, z) {
@@ -694,13 +709,17 @@ function animateAnimalVisual(visual, time, moving) {
 
 function updatePlayer(dt, time) {
   const keyboard = keyboardInput();
-  const input = Math.hypot(keyboard.x, keyboard.y) > 0.01 ? keyboard : { x: moveInput.x, y: moveInput.y };
+  const rawInput = Math.hypot(keyboard.x, keyboard.y) > 0.01 ? keyboard : { x: moveInput.x, y: moveInput.y };
+  const dashHeld = Boolean(keys.Space);
+  const dashing = Boolean(dashHeld && dashEnergy > 0.001);
+  const input = dashInput(rawInput, dashing);
   if (Math.abs(input.x) > 0.01) playerHeading = steerHeading(playerHeading, turnInputFromScreenX(input.x), dt, PLAYER_TURN_SPEED);
   const forward = forwardForHeading(playerHeading);
   const direction = { x: forward.x * input.y, z: forward.z * input.y };
   const moving = Math.abs(input.y) > 0.01;
-  const dashing = Boolean(keys.Space && moving);
-  const speed = speedForInput(dashing);
+  const speed = speedForInput(dashing, PLAYER_SPEED, dashEnergy);
+  dashEnergy = updateDashEnergy(dashEnergy, dashHeld, dt);
+  updateEnergyHUD();
   player.rotation.y = playerHeading;
   if (moving) {
     const origin = player.position.clone();
@@ -731,6 +750,8 @@ function updatePlayer(dt, time) {
   document.body.dataset.playerSpeed = String(speed);
   document.body.dataset.playerNormalSpeed = String(PLAYER_SPEED);
   document.body.dataset.dashSpeed = String(DASH_SPEED);
+  document.body.dataset.dashEnergy = dashEnergy.toFixed(2);
+  document.body.dataset.dashEnergyMax = String(DASH_ENERGY_MAX);
 }
 
 function updatePets(dt, time) {
@@ -935,10 +956,13 @@ addEventListener('keyup', (event) => {
 addEventListener('blur', () => {
   Object.keys(keys).forEach((key) => { keys[key] = false; });
   moveInput.set(0, 0);
+  if (joystickPointerId !== null) resetJoystick();
 });
 
 const joystick = $('#joystick');
 const stick = $('#stick');
+const JOYSTICK_RADIUS = 64;
+const JOYSTICK_MAX = 43;
 let joystickPointerId = null;
 
 function updateJoystick(event) {
@@ -947,38 +971,66 @@ function updateJoystick(event) {
   const centerY = rect.top + rect.height / 2;
   let dx = event.clientX - centerX;
   let dy = event.clientY - centerY;
-  const maximum = 43;
   const length = Math.hypot(dx, dy) || 1;
-  const magnitude = Math.min(maximum, length);
+  const magnitude = Math.min(JOYSTICK_MAX, length);
   dx = (dx / length) * magnitude;
   dy = (dy / length) * magnitude;
   stick.style.transform = `translate(${dx}px, ${dy}px)`;
-  moveInput.set(Math.max(-1, Math.min(1, dx / maximum)), Math.max(-1, Math.min(1, -dy / maximum)));
+  moveInput.set(Math.max(-1, Math.min(1, dx / JOYSTICK_MAX)), Math.max(-1, Math.min(1, -dy / JOYSTICK_MAX)));
 }
 
-function endJoystick(event) {
-  if (event.pointerId !== joystickPointerId) return;
+function placeJoystick(clientX, clientY) {
+  const edge = 12;
+  const x = Math.max(JOYSTICK_RADIUS + edge, Math.min(window.innerWidth - JOYSTICK_RADIUS - edge, clientX));
+  const y = Math.max(JOYSTICK_RADIUS + edge, Math.min(window.innerHeight - JOYSTICK_RADIUS - edge, clientY));
+  joystick.style.left = `${x}px`;
+  joystick.style.top = `${y}px`;
+}
+
+function resetJoystick(event) {
+  if (event?.pointerId != null && event.pointerId !== joystickPointerId) return;
   joystickPointerId = null;
   stick.style.transform = '';
+  joystick.classList.remove('visible');
+  joystick.setAttribute('aria-hidden', 'true');
+  joystick.style.left = '';
+  joystick.style.top = '';
   moveInput.set(0, 0);
 }
 
-joystick.addEventListener('pointerdown', (event) => {
+function canStartJoystick(event) {
+  if (!started || joystickPointerId !== null) return false;
+  const target = event.target instanceof Element ? event.target : null;
+  if (target?.closest('#dash, #shopShade, #startScreen, button, a, input, select, textarea')) return false;
+  return event.pointerType !== 'mouse' || matchMedia('(pointer: coarse)').matches;
+}
+
+function beginJoystick(event) {
+  if (!canStartJoystick(event)) return;
   event.preventDefault();
   joystickPointerId = event.pointerId;
+  placeJoystick(event.clientX, event.clientY);
+  joystick.classList.add('visible');
+  joystick.setAttribute('aria-hidden', 'false');
   try {
     joystick.setPointerCapture(event.pointerId);
   } catch {
-    // Pointer capture is optional; Safari can reject synthetic/non-active IDs.
+    // Pointer capture is optional; window listeners still track the active pointer.
   }
   updateJoystick(event);
-});
-joystick.addEventListener('pointermove', (event) => {
-  if (event.pointerId === joystickPointerId) updateJoystick(event);
-});
-joystick.addEventListener('pointerup', endJoystick);
-joystick.addEventListener('pointercancel', endJoystick);
-joystick.addEventListener('lostpointercapture', endJoystick);
+}
+
+function moveJoystick(event) {
+  if (event.pointerId !== joystickPointerId) return;
+  event.preventDefault();
+  updateJoystick(event);
+}
+
+addEventListener('pointerdown', beginJoystick, { passive: false });
+addEventListener('pointermove', moveJoystick, { passive: false });
+addEventListener('pointerup', resetJoystick);
+addEventListener('pointercancel', resetJoystick);
+joystick.addEventListener('lostpointercapture', resetJoystick);
 
 const dashButton = $('#dash');
 dashButton.addEventListener('pointerdown', (event) => {

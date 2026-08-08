@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#88c57a" />
   <title>Wildheart Explorer</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="stylesheet" href="./src/styles.css?v=v5" />
 </head>
 <body>
 <div id="loading"><div class="loadingCard"><div class="spinner"></div><b>Growing the world…</b><div style="font-size:13px;opacity:.65;margin-top:6px">Loading the 3D engine and building biomes.</div></div></div>
@@ -14,7 +14,7 @@
   <div class="shell">
     <h1>Wildheart Explorer</h1>
     <p class="tag">Explore four biomes, collect diamonds, grow your pet pack, and dash through pesky mobs.</p>
-    <p id="buildMarker" class="buildMarker">Build 2026.08.08.4 · screen-direction controls</p>
+    <p id="buildMarker" class="buildMarker">v5</p>
     <div class="sectionTitle">Choose your explorer</div>
     <div class="cards" id="animalChoices">
       <button class="pick selected" data-animal="fox"><span class="emoji">🦊</span><b>Fox</b></button>
@@ -30,17 +30,18 @@
       <button class="pick" data-pet="hedgehog"><span class="emoji">🦔</span><b>Hedgehog</b></button>
     </div>
     <button id="startBtn">Start exploring</button>
-    <p class="note">Desktop: WASD / arrow keys to move, Space to dash. iPad/iPhone: use the left thumb stick and hold Dash to run faster. The camera follows behind the explorer, so forward always means the way the explorer is facing.</p>
+    <p class="note">Desktop: WASD / arrow keys to move, Space to dash. iPad/iPhone: tap the playfield, then drag the thumb stick that appears. Hold Dash to run forward faster. The camera follows behind the explorer, so forward always means the way the explorer is facing.</p>
   </div>
 </div>
 <div id="hud" class="hidden">
   <div class="topRow"><div class="hudGroup"><div class="pill">💎 <span id="diamondCount">0</span></div><div class="pill">🐾 <span id="petCount">1</span></div><div class="pill biome" id="biomeName">Meadow</div></div><div class="hudGroup"><button class="hudBtn" id="shopBtn">Pet Shop</button><button class="hudBtn" id="resetBtn">Restart</button></div></div>
+  <div id="energyBar" role="progressbar" aria-label="Dash energy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><span class="energyLabel">DASH ENERGY</span><div class="energyTrack"><div id="energyFill"></div></div></div>
   <div id="toast">Diamond collected!</div>
-  <div id="joystick" aria-label="Movement joystick" role="application"><div class="stick" id="stick"></div></div>
+  <div id="joystick" aria-label="Movement joystick" aria-hidden="true" role="application"><div class="stick" id="stick"></div></div>
   <button id="dash" aria-label="Hold to dash">DASH</button>
   <div id="desktopHint">WASD / Arrows · Space = Dash · Run into mobs</div>
 </div>
 <div id="shopShade" class="hidden"><div class="shop"><div class="shopHead"><div><h2>Pet Shop</h2><div style="font-size:13px;opacity:.65">Spend diamonds to add another follower.</div></div><button class="close" id="shopClose">✕</button></div><div class="shopGrid" id="shopGrid"></div></div></div>
-<script type="module" src="./src/game.js?v=20260808-4"></script>
+<script type="module" src="./src/game.js?v=v5"></script>
 </body>
 </html>
