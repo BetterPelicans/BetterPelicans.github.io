@@ -1,5 +1,8 @@
 export const PLAYER_SPEED = 7.2;
-export const PLAYER_TURN_SPEED = 3.8;
+export const PLAYER_TURN_SPEED = 1.8;
+export const TURN_INPUT_DEADZONE = 0.18;
+export const TURN_INPUT_RESPONSE = 1.4;
+export const TURN_SMOOTHING_RESPONSE = 12;
 export const DASH_SPEED = 18;
 export const DASH_MIN_SPEED = 11;
 export const DASH_ENERGY_MAX = 100;
@@ -50,6 +53,20 @@ export function steerHeading(heading, turnInput, dt, turnSpeed = PLAYER_TURN_SPE
   return heading + turnInput * turnSpeed * dt;
 }
 
+export function smoothInput(current, target, dt, response = TURN_SMOOTHING_RESPONSE) {
+  const safeDt = Math.max(0, dt);
+  const safeResponse = Math.max(0, response);
+  if (safeDt === 0 || safeResponse === 0) return current;
+  return current + (target - current) * (1 - Math.exp(-safeResponse * safeDt));
+}
+
+function applyTurnDeadzone(horizontalInput) {
+  const magnitude = Math.abs(horizontalInput);
+  if (magnitude <= TURN_INPUT_DEADZONE) return 0;
+  const normalized = (magnitude - TURN_INPUT_DEADZONE) / (1 - TURN_INPUT_DEADZONE);
+  return Math.sign(horizontalInput) * normalized ** TURN_INPUT_RESPONSE;
+}
+
 /**
  * Maps a horizontal control value into the turn basis seen by the follow camera.
  * With this camera behind the explorer, its screen-right axis is world -X at
@@ -57,7 +74,8 @@ export function steerHeading(heading, turnInput, dt, turnSpeed = PLAYER_TURN_SPE
  * changes the world-space heading.
  */
 export function turnInputFromScreenX(horizontalInput) {
-  return -horizontalInput;
+  const easedInput = applyTurnDeadzone(horizontalInput);
+  return easedInput === 0 ? 0 : -easedInput;
 }
 
 export function movementDelta(direction, speed, dt) {

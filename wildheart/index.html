@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#88c57a" />
   <title>Wildheart Explorer</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="./src/styles.css?v=v5" />
+  <link rel="stylesheet" href="./src/styles.css?v=v6" />
 </head>
 <body>
 <div id="loading"><div class="loadingCard"><div class="spinner"></div><b>Growing the world…</b><div style="font-size:13px;opacity:.65;margin-top:6px">Loading the 3D engine and building biomes.</div></div></div>
@@ -14,7 +14,7 @@
   <div class="shell">
     <h1>Wildheart Explorer</h1>
     <p class="tag">Explore four biomes, collect diamonds, grow your pet pack, and dash through pesky mobs.</p>
-    <p id="buildMarker" class="buildMarker">v5</p>
+    <p id="buildMarker" class="buildMarker">v6</p>
     <div class="sectionTitle">Choose your explorer</div>
     <div class="cards" id="animalChoices">
       <button class="pick selected" data-animal="fox"><span class="emoji">🦊</span><b>Fox</b></button>
@@ -30,7 +30,7 @@
       <button class="pick" data-pet="hedgehog"><span class="emoji">🦔</span><b>Hedgehog</b></button>
     </div>
     <button id="startBtn">Start exploring</button>
-    <p class="note">Desktop: WASD / arrow keys to move, Space to dash. iPad/iPhone: tap the playfield, then drag the thumb stick that appears. Hold Dash to run forward faster. The camera follows behind the explorer, so forward always means the way the explorer is facing.</p>
+    <p class="note">Desktop: WASD / arrow keys to move, Space to dash. iPad/iPhone: tap the playfield, then drag the thumb stick that appears. Tiny side drags are ignored and bigger turns ease in gently. Hold Dash to run forward faster. The camera follows behind the explorer, so forward always means the way the explorer is facing.</p>
   </div>
 </div>
 <div id="hud" class="hidden">
@@ -42,6 +42,6 @@
   <div id="desktopHint">WASD / Arrows · Space = Dash · Run into mobs</div>
 </div>
 <div id="shopShade" class="hidden"><div class="shop"><div class="shopHead"><div><h2>Pet Shop</h2><div style="font-size:13px;opacity:.65">Spend diamonds to add another follower.</div></div><button class="close" id="shopClose">✕</button></div><div class="shopGrid" id="shopGrid"></div></div></div>
-<script type="module" src="./src/game.js?v=v5"></script>
+<script type="module" src="./src/game.js?v=v6"></script>
 </body>
 </html>

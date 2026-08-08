@@ -7,6 +7,7 @@ import {
   DASH_SPEED,
   PLAYER_SPEED,
   PLAYER_TURN_SPEED,
+  TURN_SMOOTHING_RESPONSE,
   cameraFollowOffset,
   dashHitsTarget,
   dashInput,
@@ -15,9 +16,10 @@ import {
   petWalkPhase,
   steerHeading,
   speedForInput,
+  smoothInput,
   turnInputFromScreenX,
   updateDashEnergy,
-} from './game-logic.mjs?v=v5';
+} from './game-logic.mjs?v=v6';
 
 const $ = (selector) => document.querySelector(selector);
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -56,6 +58,7 @@ let playerVisual;
 let playerHeading = 0;
 let cameraHeading = 0;
 let moveInput = new THREE.Vector2();
+let smoothedTurnInput = 0;
 let pets = [];
 let diamondsWorld = [];
 let mobs = [];
@@ -713,7 +716,11 @@ function updatePlayer(dt, time) {
   const dashHeld = Boolean(keys.Space);
   const dashing = Boolean(dashHeld && dashEnergy > 0.001);
   const input = dashInput(rawInput, dashing);
-  if (Math.abs(input.x) > 0.01) playerHeading = steerHeading(playerHeading, turnInputFromScreenX(input.x), dt, PLAYER_TURN_SPEED);
+  const targetTurnInput = turnInputFromScreenX(input.x);
+  smoothedTurnInput = smoothInput(smoothedTurnInput, targetTurnInput, dt, TURN_SMOOTHING_RESPONSE);
+  if (Math.abs(smoothedTurnInput) > 0.005) {
+    playerHeading = steerHeading(playerHeading, smoothedTurnInput, dt, PLAYER_TURN_SPEED);
+  }
   const forward = forwardForHeading(playerHeading);
   const direction = { x: forward.x * input.y, z: forward.z * input.y };
   const moving = Math.abs(input.y) > 0.01;
@@ -746,6 +753,7 @@ function updatePlayer(dt, time) {
   document.body.dataset.playerX = player.position.x.toFixed(3);
   document.body.dataset.playerZ = player.position.z.toFixed(3);
   document.body.dataset.playerHeading = playerHeading.toFixed(3);
+  document.body.dataset.playerTurnInput = smoothedTurnInput.toFixed(3);
   document.body.dataset.dashing = String(dashing);
   document.body.dataset.playerSpeed = String(speed);
   document.body.dataset.playerNormalSpeed = String(PLAYER_SPEED);
@@ -956,6 +964,7 @@ addEventListener('keyup', (event) => {
 addEventListener('blur', () => {
   Object.keys(keys).forEach((key) => { keys[key] = false; });
   moveInput.set(0, 0);
+  smoothedTurnInput = 0;
   if (joystickPointerId !== null) resetJoystick();
 });
 
