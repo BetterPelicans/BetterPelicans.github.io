@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#f3f6fb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Sudoku — A quiet logic break</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="app-header">
+        <div class="brand-lockup">
+          <span class="brand-mark" aria-hidden="true">9</span>
+          <div>
+            <p class="eyebrow">A quiet logic break</p>
+            <h1>Sudoku</h1>
+          </div>
+        </div>
+        <button class="new-game-button" id="new-game" type="button">New game</button>
+      </header>
+
+      <section class="game-card" aria-label="Sudoku game">
+        <div class="game-tools">
+          <label class="difficulty-field" for="difficulty">
+            <span>Difficulty</span>
+            <select id="difficulty">
+              <option value="easy">Easy</option>
+              <option value="medium" selected>Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </label>
+
+          <label class="toggle-field" for="auto-check">
+            <input id="auto-check" type="checkbox" checked>
+            <span class="toggle-track" aria-hidden="true"><span></span></span>
+            <span>Auto-check</span>
+          </label>
+
+          <button class="undo-button" id="undo" type="button" aria-label="Undo last move" disabled>
+            <span aria-hidden="true">↶</span>
+            <span>Undo</span>
+          </button>
+        </div>
+
+        <div class="puzzle-heading">
+          <div>
+            <p class="eyebrow">Generated locally</p>
+            <p class="puzzle-status" id="puzzle-status">Medium · 34 clues</p>
+          </div>
+          <span class="status-dot" id="status-dot" aria-label="Puzzle ready"></span>
+        </div>
+
+        <div class="board-wrap">
+          <div class="sudoku-board" id="board" role="grid" aria-label="Sudoku board"></div>
+          <div class="generating-cover" id="generating-cover" hidden>
+            <span class="spinner" aria-hidden="true"></span>
+            <span>Making a puzzle…</span>
+          </div>
+        </div>
+
+        <p class="message" id="message" aria-live="polite">Tap a square, then choose a number.</p>
+      </section>
+
+      <section class="controls-card" aria-label="Number controls">
+        <div class="controls-heading">
+          <div>
+            <p class="eyebrow">Number pad</p>
+            <p class="controls-help" id="controls-help">Select a square to begin</p>
+          </div>
+          <span class="notes-badge" id="notes-badge">Notes off</span>
+        </div>
+
+        <div class="number-pad" id="number-pad" role="group" aria-label="Number pad">
+          <button class="number-key" type="button" data-number="1" aria-label="Enter 1">1</button>
+          <button class="number-key" type="button" data-number="2" aria-label="Enter 2">2</button>
+          <button class="number-key" type="button" data-number="3" aria-label="Enter 3">3</button>
+          <button class="number-key" type="button" data-number="4" aria-label="Enter 4">4</button>
+          <button class="number-key" type="button" data-number="5" aria-label="Enter 5">5</button>
+          <button class="number-key" type="button" data-number="6" aria-label="Enter 6">6</button>
+          <button class="number-key" type="button" data-number="7" aria-label="Enter 7">7</button>
+          <button class="number-key" type="button" data-number="8" aria-label="Enter 8">8</button>
+          <button class="number-key" type="button" data-number="9" aria-label="Enter 9">9</button>
+        </div>
+
+        <div class="action-row">
+          <button class="secondary-button" id="erase" type="button" disabled>
+            <span class="action-icon" aria-hidden="true">⌫</span>
+            <span>Erase</span>
+          </button>
+          <button class="secondary-button" id="notes" type="button" aria-pressed="false" disabled>
+            <span class="action-icon" aria-hidden="true">✎</span>
+            <span id="notes-label">Notes off</span>
+          </button>
+        </div>
+      </section>
+
+      <footer class="app-footer">Every puzzle is made on this device and has one solution.</footer>
+    </main>
+
+    <script src="sudoku.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
