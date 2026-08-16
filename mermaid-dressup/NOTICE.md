@@ -4,7 +4,7 @@ This standalone site uses selected original raster files from character packs by
 
 ## Published build
 
-- Source project commit: `518bb65` (`Add live layer ordering controls`)
+- Source project commit: `97389e2` (`Add layer-order export`)
 - Published build: Vite production output from the verified `mermaid-dressup` repository
 - Catalog contract: 1,093 logical PNG layers; physical emitted files are validated by the source build checks
 - The site contains the game runtime and selected derived/catalogued use of the source PNGs. It does not publish the preserved source archives as a standalone asset collection.
