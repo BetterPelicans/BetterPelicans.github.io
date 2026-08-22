@@ -4,9 +4,10 @@ This standalone site uses selected original raster files from character packs by
 
 ## Published build
 
-- Source project commit: `97389e2` (`Add layer-order export`)
+- Source project commit: `f4b817d` (`Add live-deploy QA probe (no-scroll + stacking at deployed URL)`)
 - Published build: Vite production output from the verified `mermaid-dressup` repository
-- Catalog contract: 1,093 logical PNG layers; physical emitted files are validated by the source build checks
+- Catalog contract: 1,099 logical PNG layers; physical emitted files are validated by the source build checks
+- The catalog includes six Tidepool companion PNGs generated for this project: otter, seal pup, sea turtle, hermit crab, starfish, and jellyfish. They are bundled only inside the game and are not published as a standalone asset collection.
 - The site contains the game runtime and selected derived/catalogued use of the source PNGs. It does not publish the preserved source archives as a standalone asset collection.
 
 ## Packs and source pages
