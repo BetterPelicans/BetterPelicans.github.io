@@ -1,0 +1,76 @@
+{
+  "blender": "5.2.1 LTS",
+  "generatorSha256": "12c64829ad0aefb558ed7f177c4e31507ebd06ee886495242ad9ef7b4da246a3",
+  "assets": [
+    {
+      "name": "bunny",
+      "meshCount": 3,
+      "triangles": 900,
+      "bytes": 75012,
+      "sha256": "7777146e7dcabcb3c0721b61cfa2e0e6d62fc1289949c56bc09c386c4b774e1a"
+    },
+    {
+      "name": "bear",
+      "meshCount": 3,
+      "triangles": 900,
+      "bytes": 75016,
+      "sha256": "b683bd3fe4ca8f601d4f3061fcf4e3edf0ff280aea9f4dbcda8be096d8d8a4bb"
+    },
+    {
+      "name": "frog",
+      "meshCount": 3,
+      "triangles": 812,
+      "bytes": 67576,
+      "sha256": "46763ab8a98621a1f95711cd356b05948da634e5a6d5732480216b6190019be3"
+    },
+    {
+      "name": "room",
+      "meshCount": 1,
+      "triangles": 5324,
+      "bytes": 451280,
+      "sha256": "865f243b03c20dadc79aef2a54176d62355b40b22c5ad2802286261376011515"
+    },
+    {
+      "name": "surprise",
+      "meshCount": 2,
+      "triangles": 352,
+      "bytes": 30520,
+      "sha256": "25f8f4831b8572f189ddd64dcc58e6e3998b009a4ec04531c5affb5cc367f2d3"
+    },
+    {
+      "name": "star",
+      "meshCount": 1,
+      "triangles": 352,
+      "bytes": 30916,
+      "sha256": "67b1e1a0e8d1098ca201d5d4a4a4e36275a72571400dd357d898f43eacc80f30"
+    },
+    {
+      "name": "duck",
+      "meshCount": 1,
+      "triangles": 220,
+      "bytes": 19768,
+      "sha256": "1be9a8c47bebbeb48758ffc7cc93e1fc87acc3f5d5d761733c74137e4b747eb0"
+    },
+    {
+      "name": "train",
+      "meshCount": 1,
+      "triangles": 308,
+      "bytes": 27208,
+      "sha256": "1ac372348e63875a3edd802efe103465f0124f36f3b0c6cd1f9e8e2d0ad159f8"
+    },
+    {
+      "name": "cake",
+      "meshCount": 1,
+      "triangles": 220,
+      "bytes": 19724,
+      "sha256": "b5c3d3787f2a31b220549c3c78b1345eb5dd121e1e61b079c8880c36af72b28c"
+    },
+    {
+      "name": "heart",
+      "meshCount": 1,
+      "triangles": 264,
+      "bytes": 23472,
+      "sha256": "efefd263eef3c6a319375b83642550e37204c7c54d626177014f5f1c12f13025"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+import{r as e}from"./runtime-BFEFBSTO.js";export{e as OpenPBRMaterialLoadingAdapter};
