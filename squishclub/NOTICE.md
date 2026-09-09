@@ -2,7 +2,8 @@
 
 This directory is the static Squish Club release built from the public
 [SquishClub repository](https://github.com/betterpelicans-bot/SquishClub/tree/9f41b1f832a5bda67aece96ca049a794cbc9c9fb)
-at commit `9f41b1f832a5bda67aece96ca049a794cbc9c9fb`.
+at source commit `9f41b1f832a5bda67aece96ca049a794cbc9c9fb` and published in
+Better Pelicans site commit `b0be078bda494509d703ef2312682450c4f2d6e7`.
 
 Build command:
 
@@ -21,7 +22,8 @@ included because it is part of that complete build output.
 - Toy artwork: original raster artwork generated through the Codex built-in `image_gen` route and prepared/validated with the repository's transparency and artwork workflow. The complete workflow and evidence remain in [`docs/ART_WORKFLOW.md`](https://github.com/betterpelicans-bot/SquishClub/blob/9f41b1f832a5bda67aece96ca049a794cbc9c9fb/docs/ART_WORKFLOW.md).
 - Character, room and starter-toy atlases: original generated artwork documented in [`docs/art-prompts.json`](https://github.com/betterpelicans-bot/SquishClub/blob/9f41b1f832a5bda67aece96ca049a794cbc9c9fb/docs/art-prompts.json), [`docs/player-art.json`](https://github.com/betterpelicans-bot/SquishClub/blob/9f41b1f832a5bda67aece96ca049a794cbc9c9fb/docs/player-art.json), and [`docs/player-art-prompts.json`](https://github.com/betterpelicans-bot/SquishClub/blob/9f41b1f832a5bda67aece96ca049a794cbc9c9fb/docs/player-art-prompts.json).
 - Optional voxel prototype: procedural Blender output with the source-side manifest in [`public/voxel/manifest.json`](https://github.com/betterpelicans-bot/SquishClub/blob/9f41b1f832a5bda67aece96ca049a794cbc9c9fb/public/voxel/manifest.json).
-- Audio is original Web Audio synthesis. There are no third-party asset packs, advertisements, analytics, purchases, paid runtime APIs, or external runtime asset requests.
+- Audio is original Web Audio synthesis. There are no third-party asset packs, advertisements, in-game analytics, purchases, or paid runtime APIs.
+- The game bundle makes no external runtime asset requests. The custom-domain hosting layer currently injects a Cloudflare Insights beacon into HTML; that site-level instrumentation is outside this build.
 - No source archive or third-party license archive is used by this release. The source pages above are the authoritative provenance records; the checksums below pin the shipped media bytes.
 
 ## SHA-256 checksums of shipped media
