@@ -1,9 +1,9 @@
 # Squish Club public release notice
 
 This directory is the static Squish Club release built from the public
-[SquishClub repository](https://github.com/betterpelicans-bot/SquishClub/tree/9f41b1f832a5bda67aece96ca049a794cbc9c9fb)
-at source commit `9f41b1f832a5bda67aece96ca049a794cbc9c9fb` and published in
-Better Pelicans site commit `b0be078bda494509d703ef2312682450c4f2d6e7`.
+[SquishClub repository](https://github.com/betterpelicans-bot/SquishClub/tree/7aa4d110a6023ae1a79a69d4b1ba6f3f96dc4b6a)
+at source commit `7aa4d110a6023ae1a79a69d4b1ba6f3f96dc4b6a`. The deployed
+site commit is recorded in this repository's Git history.
 
 Build command:
 
@@ -17,11 +17,11 @@ included because it is part of that complete build output.
 
 ## Provenance
 
-- Game source, build configuration and catalogue: [SquishClub at the pinned commit](https://github.com/betterpelicans-bot/SquishClub/tree/9f41b1f832a5bda67aece96ca049a794cbc9c9fb).
-- Toy catalogue and per-toy metadata: [`art/catalog.json`](https://github.com/betterpelicans-bot/SquishClub/blob/9f41b1f832a5bda67aece96ca049a794cbc9c9fb/art/catalog.json) and the `art/approved/<slug>/asset.json` records.
-- Toy artwork: original raster artwork generated through the Codex built-in `image_gen` route and prepared/validated with the repository's transparency and artwork workflow. The complete workflow and evidence remain in [`docs/ART_WORKFLOW.md`](https://github.com/betterpelicans-bot/SquishClub/blob/9f41b1f832a5bda67aece96ca049a794cbc9c9fb/docs/ART_WORKFLOW.md).
-- Character, room and starter-toy atlases: original generated artwork documented in [`docs/art-prompts.json`](https://github.com/betterpelicans-bot/SquishClub/blob/9f41b1f832a5bda67aece96ca049a794cbc9c9fb/docs/art-prompts.json), [`docs/player-art.json`](https://github.com/betterpelicans-bot/SquishClub/blob/9f41b1f832a5bda67aece96ca049a794cbc9c9fb/docs/player-art.json), and [`docs/player-art-prompts.json`](https://github.com/betterpelicans-bot/SquishClub/blob/9f41b1f832a5bda67aece96ca049a794cbc9c9fb/docs/player-art-prompts.json).
-- Optional voxel prototype: procedural Blender output with the source-side manifest in [`public/voxel/manifest.json`](https://github.com/betterpelicans-bot/SquishClub/blob/9f41b1f832a5bda67aece96ca049a794cbc9c9fb/public/voxel/manifest.json).
+- Game source, build configuration and catalogue: [SquishClub at the pinned commit](https://github.com/betterpelicans-bot/SquishClub/tree/7aa4d110a6023ae1a79a69d4b1ba6f3f96dc4b6a).
+- Toy catalogue and per-toy metadata: [`art/catalog.json`](https://github.com/betterpelicans-bot/SquishClub/blob/7aa4d110a6023ae1a79a69d4b1ba6f3f96dc4b6a/art/catalog.json) and the `art/approved/<slug>/asset.json` records.
+- Toy artwork: original raster artwork generated through the Codex built-in `image_gen` route and prepared/validated with the repository's transparency and artwork workflow. The complete workflow and evidence remain in [`docs/ART_WORKFLOW.md`](https://github.com/betterpelicans-bot/SquishClub/blob/7aa4d110a6023ae1a79a69d4b1ba6f3f96dc4b6a/docs/ART_WORKFLOW.md).
+- Character, room and starter-toy atlases: original generated artwork documented in [`docs/art-prompts.json`](https://github.com/betterpelicans-bot/SquishClub/blob/7aa4d110a6023ae1a79a69d4b1ba6f3f96dc4b6a/docs/art-prompts.json), [`docs/player-art.json`](https://github.com/betterpelicans-bot/SquishClub/blob/7aa4d110a6023ae1a79a69d4b1ba6f3f96dc4b6a/docs/player-art.json), and [`docs/player-art-prompts.json`](https://github.com/betterpelicans-bot/SquishClub/blob/7aa4d110a6023ae1a79a69d4b1ba6f3f96dc4b6a/docs/player-art-prompts.json).
+- Optional voxel prototype: procedural Blender output with the source-side manifest in [`public/voxel/manifest.json`](https://github.com/betterpelicans-bot/SquishClub/blob/7aa4d110a6023ae1a79a69d4b1ba6f3f96dc4b6a/public/voxel/manifest.json).
 - Audio is original Web Audio synthesis. There are no third-party asset packs, advertisements, in-game analytics, purchases, or paid runtime APIs.
 - The game bundle makes no external runtime asset requests. The custom-domain hosting layer currently injects a Cloudflare Insights beacon into HTML; that site-level instrumentation is outside this build.
 - No source archive or third-party license archive is used by this release. The source pages above are the authoritative provenance records; the checksums below pin the shipped media bytes.
@@ -72,6 +72,7 @@ art/toys/strawberry-puff/toy.png 51dc1edf46b48aee4e0dd208ba4d52f07597127735dab8b
 art/toys/sunny-satsuma/toy.png 21f54951bc4ebcc9f607ed1a20a3f6b2cc4d708d89a77d938dd95859ecfd898f
 art/toys/tiger-mochi/toy.png 98f2d4d528536e2be65c71cc73324a81b9ebfbc572a4431cf5c953e5d412d7ef
 art/toys/tomato-tumble/toy.png 147991ad4c360e487db22f9f274044bc96fdc142a8a78fb9e08dd12b41ae93e9
+art/toys/tomato-slice/toy.png fae2671aa5b633cb031b5ccce059538c6bd4af16a50f72c6260f5cef4b7e9b58
 ```
 
 ### Optional voxel prototype assets
