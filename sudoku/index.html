@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Sudoku — A quiet logic break</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=extreme-1">
+    <link rel="stylesheet" href="styles.css?v=history-1">
   </head>
   <body>
     <main class="app-shell">
@@ -120,10 +120,16 @@
 
       </section>
 
+      <section class="completion-card" aria-labelledby="completion-heading">
+        <h2 id="completion-heading">Completion history</h2>
+        <p id="completion-help"></p>
+        <ol id="completion-list" aria-label="Completed puzzles"></ol>
+      </section>
+
       <footer class="app-footer">Every puzzle is made on this device, has one solution, and can be solved using logical deductions without guessing.</footer>
     </main>
 
-    <script src="sudoku.js?v=extreme-1"></script>
-    <script src="app.js?v=extreme-1"></script>
+    <script src="sudoku.js?v=history-1"></script>
+    <script src="app.js?v=history-1"></script>
   </body>
 </html>

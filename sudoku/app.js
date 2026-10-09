@@ -28,12 +28,109 @@
   var statusDot = document.getElementById("status-dot");
   var generatingCover = document.getElementById("generating-cover");
   var cellElements = [];
+  var completionList = document.getElementById("completion-list");
+  var completionHelp = document.getElementById("completion-help");
+  var COMPLETION_STORAGE_KEY = "betterpelicans.sudoku.completions.v1";
+  var completions = [];
+  var historySaved = true;
+
+  function readCompletions() {
+    var stored;
+    try {
+      stored = window.localStorage.getItem(COMPLETION_STORAGE_KEY);
+    } catch (error) {
+      // Storage can be disabled or unavailable. The game remains playable.
+      return null;
+    }
+    try {
+      var entries = JSON.parse(stored || "[]");
+      if (!Array.isArray(entries)) {
+        return [];
+      }
+      return entries.filter(function (entry) {
+        return entry && Object.prototype.hasOwnProperty.call(engine.DIFFICULTIES, entry.difficulty) &&
+          Number.isInteger(entry.seed) && entry.seed >= 1 && entry.seed <= 4294967295 &&
+          typeof entry.version === "string" && (entry.version === "1" || entry.version === "2") &&
+          Number.isInteger(entry.clues) && entry.clues >= 17 && entry.clues <= 81 &&
+          typeof entry.completedAt === "string" && Number.isFinite(Date.parse(entry.completedAt));
+      }).slice(0, 100);
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function renderCompletions() {
+    completionList.textContent = "";
+    completionHelp.textContent = historySaved ?
+      "Latest 100 completions, saved in this browser on this device. History starts with new completions." :
+      "History cannot be saved in this browser right now. New completions are kept for this session only.";
+    if (!completions.length) {
+      var empty = document.createElement("li");
+      empty.className = "completion-empty";
+      empty.textContent = "No completed puzzles yet. Finish a puzzle to add it here.";
+      completionList.appendChild(empty);
+      return;
+    }
+    completions.forEach(function (entry, index) {
+      var item = document.createElement("li");
+      var details = document.createElement("div");
+      var title = document.createElement("p");
+      var reference = document.createElement("p");
+      var date = document.createElement("time");
+      var replay = document.createElement("button");
+      title.className = "completion-title";
+      title.textContent = engine.DIFFICULTIES[entry.difficulty].name + " · " + entry.clues + " clues";
+      reference.textContent = "Seed " + entry.seed + " · v" + entry.version;
+      date.dateTime = entry.completedAt;
+      date.textContent = new Date(entry.completedAt).toLocaleString();
+      details.appendChild(title);
+      details.appendChild(reference);
+      details.appendChild(date);
+      replay.type = "button";
+      replay.className = "secondary-button";
+      replay.textContent = "Replay";
+      replay.dataset.completionIndex = String(index);
+      replay.setAttribute("aria-label", "Replay " + engine.DIFFICULTIES[entry.difficulty].name + " puzzle, seed " + entry.seed);
+      replay.disabled = state.isGenerating;
+      item.appendChild(details);
+      item.appendChild(replay);
+      completionList.appendChild(item);
+    });
+  }
+
+  function recordCompletion() {
+    if (state.completionRecorded) {
+      return;
+    }
+    state.completionRecorded = true;
+    var existing = readCompletions();
+    if (historySaved && existing !== null) {
+      completions = existing;
+    }
+    completions.unshift({
+      difficulty: state.game.difficulty,
+      seed: state.game.seed,
+      version: state.game.version,
+      clues: state.game.clues,
+      completedAt: new Date().toISOString()
+    });
+    completions = completions.slice(0, 100);
+    try {
+      window.localStorage.setItem(COMPLETION_STORAGE_KEY, JSON.stringify(completions));
+      historySaved = true;
+    } catch (error) {
+      historySaved = false;
+    }
+    renderCompletions();
+  }
 
   var state = {
     difficulty: difficultyElement.value,
     puzzle: null,
     solution: null,
     seed: null,
+    game: null,
+    completionRecorded: false,
     values: new Uint8Array(engine.CELL_COUNT),
     notes: new Uint16Array(engine.CELL_COUNT),
     selectedIndex: -1,
@@ -245,6 +342,9 @@
     seedInput.disabled = state.isGenerating;
     loadSeedButton.disabled = state.isGenerating;
     copyLinkButton.disabled = state.isGenerating || !state.puzzle;
+    completionList.querySelectorAll("button").forEach(function (button) {
+      button.disabled = state.isGenerating;
+    });
     difficultyElement.disabled = state.isGenerating;
     boardElement.setAttribute("aria-busy", state.isGenerating ? "true" : "false");
     boardElement.classList.toggle("is-generating", state.isGenerating);
@@ -301,8 +401,9 @@
       }
     }
     state.isComplete = true;
+    recordCompletion();
     statusDot.classList.add("is-complete");
-    setMessage("Puzzle complete — nicely done.", "success");
+    setMessage(historySaved ? "Puzzle complete — nicely done." : "Puzzle complete — nicely done. History kept for this session only.", "success");
     return true;
   }
 
@@ -426,6 +527,8 @@
         state.puzzle = game.puzzle;
         state.solution = game.solution;
         state.seed = game.seed;
+        state.game = { difficulty: game.difficulty, seed: game.seed, version: game.version, clues: game.clues };
+        state.completionRecorded = false;
         state.values = new Uint8Array(engine.CELL_COUNT);
         state.notes = new Uint16Array(engine.CELL_COUNT);
         puzzleStatus.textContent = engine.DIFFICULTIES[game.difficulty].name + " · " + game.clues + " clues";
@@ -479,6 +582,29 @@
   });
 
   newGameButton.addEventListener("click", function () { startNewGame(); });
+  completionList.addEventListener("click", function (event) {
+    var button = event.target.closest("[data-completion-index]");
+    if (!button || state.isGenerating) {
+      return;
+    }
+    var entry = completions[Number(button.dataset.completionIndex)];
+    if (!entry) {
+      return;
+    }
+    state.difficulty = entry.difficulty;
+    difficultyElement.value = entry.difficulty;
+    startNewGame(entry.seed, entry.version);
+    boardElement.scrollIntoView({ block: "start" });
+  });
+  window.addEventListener("storage", function (event) {
+    if (event.key === COMPLETION_STORAGE_KEY || event.key === null) {
+      var entries = readCompletions();
+      if (entries !== null && historySaved) {
+        completions = entries;
+        renderCompletions();
+      }
+    }
+  });
   document.getElementById("seed-form").addEventListener("submit", function (event) {
     event.preventDefault();
     startNewGame(seedInput.value);
@@ -510,6 +636,10 @@
   });
 
   createBoard();
+  var savedCompletions = readCompletions();
+  historySaved = savedCompletions !== null;
+  completions = savedCompletions || [];
+  renderCompletions();
   render();
   var params = new URLSearchParams(window.location.search);
   if (params.has("seed")) {
