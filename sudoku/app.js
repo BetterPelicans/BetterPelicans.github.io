@@ -403,7 +403,7 @@
       if (seed === undefined && requestedSeed === state.seed) {
         requestedSeed = requestedSeed % 4294967295 + 1;
       }
-      if (version && version !== engine.GENERATOR_VERSION) {
+      if (version && version !== engine.generatorVersion(state.difficulty)) {
         throw new Error("This puzzle uses an unsupported generator version.");
       }
     } catch (error) {
@@ -441,7 +441,7 @@
         window.history.replaceState(null, "", url.href);
         setMessage("Tap a square, then choose a number.");
       } catch (error) {
-        setMessage("Could not make a puzzle. Please try again.", "error");
+        setMessage(requestedDifficulty === "extreme" ? error.message : "Could not make a puzzle. Please try again.", "error");
         // Keep the error visible to developers without interrupting the game UI.
         console.error(error);
       } finally {
@@ -518,7 +518,7 @@
       difficultyElement.value = difficulty;
       state.difficulty = difficulty;
       seedInput.value = params.get("seed");
-      startNewGame(params.get("seed"), params.get("v") || engine.GENERATOR_VERSION);
+      startNewGame(params.get("seed"), params.get("v") || engine.generatorVersion(difficulty));
     } else {
       setMessage("This puzzle link needs a valid difficulty. Choose one and load the seed.", "error");
       seedInput.value = params.get("seed");

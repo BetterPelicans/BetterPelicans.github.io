@@ -50,7 +50,7 @@ function candidates(board, index) {
   return [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(value => !used.has(value));
 }
 
-for (const difficulty of Object.keys(engine.DIFFICULTIES)) {
+for (const difficulty of Object.keys(engine.DIFFICULTIES).filter(key => key !== "extreme")) {
   test(`${difficulty}: 100 seeded puzzles have exact clue counts, unique solutions and valid logical paths`, () => {
     for (let seed = 1; seed <= 100; seed++) {
       const game = engine.generatePuzzle(difficulty, engine.createRng(seed));
@@ -103,4 +103,94 @@ test("Logical solver rejects invalid boards and handles completed boards", () =>
 test("Seeded generation is reproducible and Very easy has substantially more clues", () => {
   assert.deepEqual(engine.generatePuzzle("very-easy", engine.createRng(42)), engine.generatePuzzle("very-easy", engine.createRng(42)));
   assert.equal(engine.DIFFICULTIES["very-easy"].targetClues - engine.DIFFICULTIES.easy.targetClues, 12);
+});
+
+function maskOf(values) {
+  return values.reduce((mask, value) => mask | (1 << (value - 1)), 0);
+}
+
+function verifyExtremeTrace(game, trace) {
+  const board = Array.from(game.puzzle);
+  const allowed = board.map((_, index) => maskOf(candidates(board, index)));
+  for (const step of trace.steps) {
+    for (let index = 0; index < 81; index++) {
+      allowed[index] &= maskOf(candidates(board, index));
+    }
+    if (step.technique === "naked-single" || step.technique === "hidden-single") {
+      const bit = 1 << (step.value - 1);
+      assert.equal(board[step.index], 0);
+      assert.ok(allowed[step.index] & bit);
+      if (step.technique === "naked-single") {
+        assert.equal(allowed[step.index], bit);
+      } else {
+        assert.deepEqual(units[step.unit].filter(index => allowed[index] & bit), [step.index]);
+      }
+      board[step.index] = step.value;
+      continue;
+    }
+    let mask;
+    let targets;
+    if (step.technique === "locked-candidate") {
+      mask = 1 << (step.value - 1);
+      const positions = units[step.sourceUnit].filter(index => allowed[index] & mask);
+      assert.ok(positions.length >= 2);
+      assert.ok(positions.every(index => units[step.targetUnit].includes(index)));
+      assert.notEqual(step.sourceUnit, step.targetUnit);
+      targets = units[step.targetUnit].filter(index => !units[step.sourceUnit].includes(index));
+    } else {
+      assert.equal(step.technique, "naked-pair");
+      mask = step.mask;
+      assert.equal([1, 2, 3, 4, 5, 6, 7, 8, 9].filter(value => mask & (1 << (value - 1))).length, 2);
+      assert.deepEqual(units[step.unit].filter(index => allowed[index] === mask), step.cells);
+      assert.equal(step.cells.length, 2);
+      targets = units[step.unit].filter(index => !step.cells.includes(index));
+    }
+    const expected = targets.filter(index => allowed[index] & mask).map(index => ({ index, mask: allowed[index] & mask }));
+    assert.ok(expected.length);
+    assert.deepEqual(step.removals, expected);
+    for (const removal of step.removals) {
+      allowed[removal.index] &= ~removal.mask;
+    }
+  }
+  assert.deepEqual(board, Array.from(game.solution));
+  assert.deepEqual(board, Array.from(trace.solution));
+}
+
+test("Extreme: 50 seeds are sparse, unique, require advanced deductions and replay valid logic", () => {
+  const techniques = new Set();
+  for (let seed = 1; seed <= 50; seed++) {
+    const game = engine.generateSeededPuzzle("extreme", seed);
+    assert.equal(game.version, "2");
+    assert.ok(game.clues >= 17 && game.clues < engine.DIFFICULTIES.hard.targetClues);
+    assert.equal(engine.countSolutions(game.puzzle, 2), 1);
+    assert.equal(engine.solveLogically(game.puzzle), null, "Hard's singles must be insufficient");
+    const before = Array.from(game.puzzle);
+    const trace = engine.solveExtremeLogically(game.puzzle);
+    assert.ok(trace);
+    assert.deepEqual(Array.from(game.puzzle), before);
+    verifyExtremeTrace(game, trace);
+    trace.steps.forEach(step => techniques.add(step.technique));
+    // A full pass must confirm no single remaining clue can be removed while
+    // keeping both the unique solution and a path under the supported rules.
+    for (let index = 0; index < 81; index++) {
+      if (!game.puzzle[index]) continue;
+      const reduced = new Uint8Array(game.puzzle);
+      reduced[index] = 0;
+      assert.ok(!engine.solveExtremeLogically(reduced) || engine.countSolutions(reduced, 2) !== 1);
+    }
+  }
+  assert.ok(techniques.has("locked-candidate"));
+  assert.ok(techniques.has("naked-pair"));
+});
+
+test("Extreme seeds replay separately from version 1 and reject invalid boards", () => {
+  assert.equal(Array.from(engine.generateSeededPuzzle("extreme", 42, "2").puzzle).join(""),
+    "000004906107006002000010050800002000700000000093000580080090000006030700000000001");
+  assert.deepEqual(engine.generateSeededPuzzle("extreme", 42), engine.generateSeededPuzzle("extreme", "42", "2"));
+  assert.throws(() => engine.generateSeededPuzzle("extreme", 42, "1"), /unsupported/);
+  assert.equal(engine.solveExtremeLogically(new Uint8Array(81)), null);
+  assert.equal(engine.solveExtremeLogically([1, 2]), null);
+  const invalid = new Uint8Array(81);
+  invalid[0] = invalid[1] = 1;
+  assert.equal(engine.solveExtremeLogically(invalid), null);
 });

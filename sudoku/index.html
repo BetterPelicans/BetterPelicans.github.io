@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Sudoku — A quiet logic break</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=seeds-1">
+    <link rel="stylesheet" href="styles.css?v=extreme-1">
   </head>
   <body>
     <main class="app-shell">
@@ -31,6 +31,7 @@
               <option value="easy">Easy</option>
               <option value="medium" selected>Medium</option>
               <option value="hard">Hard</option>
+              <option value="extreme">Extreme</option>
             </select>
           </label>
 
@@ -46,27 +47,10 @@
           </button>
         </div>
 
-        <button class="secondary-button print-button" id="print-puzzle" type="button" disabled>Print puzzle</button>
-
-        <form class="seed-tools" id="seed-form">
-          <label for="seed">Puzzle seed</label>
-          <div class="seed-row">
-            <input id="seed" type="text" inputmode="numeric" autocomplete="off" placeholder="Enter a seed" aria-describedby="seed-help">
-            <button class="secondary-button" id="load-seed" type="submit">Load seed</button>
-          </div>
-          <p id="seed-help">Use the same seed and difficulty to replay a puzzle. New game picks a fresh seed.</p>
-        </form>
-        <div class="share-tools">
-          <label for="puzzle-link">Link to this puzzle</label>
-          <input id="puzzle-link" type="text" readonly>
-          <button class="secondary-button" id="copy-link" type="button" disabled>Copy puzzle link</button>
-        </div>
-
         <div class="puzzle-heading">
           <div>
             <p class="eyebrow">Generated locally</p>
             <p class="puzzle-status" id="puzzle-status">Medium · 34 clues</p>
-            <p class="seed-status" id="seed-status"></p>
           </div>
           <span class="status-dot" id="status-dot" aria-label="Puzzle ready"></span>
         </div>
@@ -115,10 +99,31 @@
         </div>
       </section>
 
+      <section class="options-card" aria-label="Special options">
+        <h2>Special options</h2>
+        <p class="seed-status" id="seed-status"></p>
+        <button class="secondary-button print-button" id="print-puzzle" type="button" disabled>Print puzzle</button>
+
+        <form class="seed-tools" id="seed-form">
+          <label for="seed">Puzzle seed</label>
+          <div class="seed-row">
+            <input id="seed" type="text" inputmode="numeric" autocomplete="off" placeholder="Enter a seed" aria-describedby="seed-help">
+            <button class="secondary-button" id="load-seed" type="submit">Load seed</button>
+          </div>
+          <p id="seed-help">Use the same seed and difficulty to replay a puzzle. New game picks a fresh seed.</p>
+        </form>
+        <div class="share-tools">
+          <label for="puzzle-link">Link to this puzzle</label>
+          <input id="puzzle-link" type="text" readonly>
+          <button class="secondary-button" id="copy-link" type="button" disabled>Copy puzzle link</button>
+        </div>
+
+      </section>
+
       <footer class="app-footer">Every puzzle is made on this device, has one solution, and can be solved using logical deductions without guessing.</footer>
     </main>
 
-    <script src="sudoku.js?v=seeds-1"></script>
-    <script src="app.js?v=seeds-1"></script>
+    <script src="sudoku.js?v=extreme-1"></script>
+    <script src="app.js?v=extreme-1"></script>
   </body>
 </html>

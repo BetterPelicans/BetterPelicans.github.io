@@ -155,7 +155,8 @@ h1 {
 }
 
 .game-card,
-.controls-card {
+.controls-card,
+.options-card {
   border: 1px solid rgba(215, 224, 237, 0.95);
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.92);
@@ -577,6 +578,24 @@ h1 {
   margin-bottom: 15px;
 }
 
+.options-card {
+  margin-top: 13px;
+  padding: 16px;
+}
+
+.options-card h2 {
+  margin: 0 0 12px;
+  font-size: 0.95rem;
+}
+
+.options-card .share-tools {
+  margin-bottom: 0;
+}
+
+.options-card .seed-status {
+  margin: 0 0 12px;
+}
+
 .seed-tools,
 .share-tools {
   margin-bottom: 15px;
@@ -654,6 +673,7 @@ h1 {
   .seed-tools,
   .share-tools,
   .controls-card,
+  .options-card h2,
   .message,
   .status-dot,
   .brand-mark,
@@ -667,6 +687,13 @@ h1 {
     background: #fff;
     box-shadow: none;
     break-inside: avoid;
+  }
+
+  .options-card {
+    padding: 0;
+    border: 0;
+    background: #fff;
+    box-shadow: none;
   }
 
   .sudoku-board {
