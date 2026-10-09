@@ -43,7 +43,8 @@ body {
 }
 
 button,
-select {
+select,
+input {
   font: inherit;
 }
 
@@ -54,6 +55,7 @@ button {
 
 button:focus-visible,
 select:focus-visible,
+input:focus-visible,
 input:focus-visible + .toggle-track {
   outline: 3px solid rgba(46, 110, 232, 0.34);
   outline-offset: 2px;
@@ -575,6 +577,58 @@ h1 {
   margin-bottom: 15px;
 }
 
+.seed-tools,
+.share-tools {
+  margin-bottom: 15px;
+}
+
+.seed-tools label,
+.share-tools label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.seed-row {
+  display: flex;
+  gap: 8px;
+}
+
+.seed-row input,
+.share-tools input {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fbfcfe;
+  color: var(--ink);
+  font-size: 0.85rem;
+}
+
+.seed-row button {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0 12px;
+}
+
+.share-tools button {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 8px;
+}
+
+#seed-help,
+.seed-status {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
 @media print {
   @page {
     margin: 15mm;
@@ -597,6 +651,8 @@ h1 {
   .new-game-button,
   .game-tools,
   .print-button,
+  .seed-tools,
+  .share-tools,
   .controls-card,
   .message,
   .status-dot,
@@ -652,6 +708,7 @@ h1 {
 
   .eyebrow,
   .puzzle-status,
+  .seed-status,
   .app-footer {
     color: #000;
   }

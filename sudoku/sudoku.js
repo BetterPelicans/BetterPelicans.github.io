@@ -48,6 +48,33 @@
     return DIFFICULTIES[key] ? key : "medium";
   }
 
+  // Version 1 is a permanent replay contract. Preserve its RNG, generation
+  // order and difficulty settings when adding future generator versions.
+  var GENERATOR_VERSION = "1";
+
+  function parseSeed(seed) {
+    var text = String(seed).trim();
+    var value = Number(text);
+    if (!/^\d+$/.test(text) || !Number.isInteger(value) || value < 1 || value > 4294967295) {
+      throw new Error("Enter a whole-number seed from 1 to 4294967295.");
+    }
+    return value;
+  }
+
+  function generateSeededPuzzle(difficulty, seed, version) {
+    if (String(version || GENERATOR_VERSION) !== GENERATOR_VERSION) {
+      throw new Error("This puzzle uses an unsupported generator version.");
+    }
+    if (!Object.prototype.hasOwnProperty.call(DIFFICULTIES, difficulty)) {
+      throw new Error("Choose a valid puzzle difficulty.");
+    }
+    var value = parseSeed(seed);
+    var game = generatePuzzle(difficulty, createRng(value));
+    game.seed = value;
+    game.version = GENERATOR_VERSION;
+    return game;
+  }
+
   function createRng(seed) {
     var state = (Number(seed) >>> 0) || 0x6d2b79f5;
 
@@ -392,6 +419,9 @@
     SIZE: SIZE,
     CELL_COUNT: CELL_COUNT,
     DIFFICULTIES: DIFFICULTIES,
+    GENERATOR_VERSION: GENERATOR_VERSION,
+    parseSeed: parseSeed,
+    generateSeededPuzzle: generateSeededPuzzle,
     createRng: createRng,
     generatePuzzle: generatePuzzle,
     countSolutions: countSolutions,

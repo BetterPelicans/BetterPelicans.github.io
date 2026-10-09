@@ -10,6 +10,11 @@
   var difficultyElement = document.getElementById("difficulty");
   var newGameButton = document.getElementById("new-game");
   var printButton = document.getElementById("print-puzzle");
+  var seedInput = document.getElementById("seed");
+  var loadSeedButton = document.getElementById("load-seed");
+  var puzzleLink = document.getElementById("puzzle-link");
+  var copyLinkButton = document.getElementById("copy-link");
+  var seedStatus = document.getElementById("seed-status");
   var undoButton = document.getElementById("undo");
   var autoCheckElement = document.getElementById("auto-check");
   var numberPad = document.getElementById("number-pad");
@@ -28,6 +33,7 @@
     difficulty: difficultyElement.value,
     puzzle: null,
     solution: null,
+    seed: null,
     values: new Uint8Array(engine.CELL_COUNT),
     notes: new Uint16Array(engine.CELL_COUNT),
     selectedIndex: -1,
@@ -236,6 +242,9 @@
     undoButton.disabled = state.history.length === 0 || state.isGenerating;
     newGameButton.disabled = state.isGenerating;
     printButton.disabled = state.isGenerating || !state.puzzle;
+    seedInput.disabled = state.isGenerating;
+    loadSeedButton.disabled = state.isGenerating;
+    copyLinkButton.disabled = state.isGenerating || !state.puzzle;
     difficultyElement.disabled = state.isGenerating;
     boardElement.setAttribute("aria-busy", state.isGenerating ? "true" : "false");
     boardElement.classList.toggle("is-generating", state.isGenerating);
@@ -259,7 +268,7 @@
   }
 
   function selectCell(index) {
-    if (state.isGenerating) {
+    if (state.isGenerating || !state.puzzle) {
       return;
     }
     state.selectedIndex = index;
@@ -383,11 +392,25 @@
     render();
   }
 
-  function startNewGame() {
+  function startNewGame(seed, version) {
     if (state.isGenerating) {
       return;
     }
 
+    var requestedSeed;
+    try {
+      requestedSeed = seed === undefined ? Math.floor(Math.random() * 4294967295) + 1 : engine.parseSeed(seed);
+      if (seed === undefined && requestedSeed === state.seed) {
+        requestedSeed = requestedSeed % 4294967295 + 1;
+      }
+      if (version && version !== engine.GENERATOR_VERSION) {
+        throw new Error("This puzzle uses an unsupported generator version.");
+      }
+    } catch (error) {
+      setMessage(error.message, "error");
+      return;
+    }
+    var requestedDifficulty = state.difficulty;
     state.isGenerating = true;
     state.isComplete = false;
     state.history = [];
@@ -399,12 +422,23 @@
 
     window.setTimeout(function () {
       try {
-        var game = engine.generatePuzzle(state.difficulty);
+        var game = engine.generateSeededPuzzle(requestedDifficulty, requestedSeed, version);
         state.puzzle = game.puzzle;
         state.solution = game.solution;
+        state.seed = game.seed;
         state.values = new Uint8Array(engine.CELL_COUNT);
         state.notes = new Uint16Array(engine.CELL_COUNT);
         puzzleStatus.textContent = engine.DIFFICULTIES[game.difficulty].name + " · " + game.clues + " clues";
+        seedInput.value = String(game.seed);
+        seedStatus.textContent = "Seed " + game.seed + " · v" + game.version;
+        var url = new URL(window.location.href);
+        url.search = "";
+        url.hash = "";
+        url.searchParams.set("seed", String(game.seed));
+        url.searchParams.set("difficulty", game.difficulty);
+        url.searchParams.set("v", game.version);
+        puzzleLink.value = url.href;
+        window.history.replaceState(null, "", url.href);
         setMessage("Tap a square, then choose a number.");
       } catch (error) {
         setMessage("Could not make a puzzle. Please try again.", "error");
@@ -444,7 +478,21 @@
     render();
   });
 
-  newGameButton.addEventListener("click", startNewGame);
+  newGameButton.addEventListener("click", function () { startNewGame(); });
+  document.getElementById("seed-form").addEventListener("submit", function (event) {
+    event.preventDefault();
+    startNewGame(seedInput.value);
+  });
+  copyLinkButton.addEventListener("click", async function () {
+    try {
+      await navigator.clipboard.writeText(puzzleLink.value);
+      setMessage("Puzzle link copied. It recreates the original puzzle.");
+    } catch (error) {
+      puzzleLink.focus();
+      puzzleLink.select();
+      setMessage("Select and copy the puzzle link above.");
+    }
+  });
   printButton.addEventListener("click", function () {
     if (!printButton.disabled) {
       window.print();
@@ -463,5 +511,19 @@
 
   createBoard();
   render();
-  startNewGame();
+  var params = new URLSearchParams(window.location.search);
+  if (params.has("seed")) {
+    var difficulty = params.get("difficulty");
+    if (Object.prototype.hasOwnProperty.call(engine.DIFFICULTIES, difficulty)) {
+      difficultyElement.value = difficulty;
+      state.difficulty = difficulty;
+      seedInput.value = params.get("seed");
+      startNewGame(params.get("seed"), params.get("v") || engine.GENERATOR_VERSION);
+    } else {
+      setMessage("This puzzle link needs a valid difficulty. Choose one and load the seed.", "error");
+      seedInput.value = params.get("seed");
+    }
+  } else {
+    startNewGame();
+  }
 })();

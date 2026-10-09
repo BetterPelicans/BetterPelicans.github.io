@@ -48,10 +48,25 @@
 
         <button class="secondary-button print-button" id="print-puzzle" type="button" disabled>Print puzzle</button>
 
+        <form class="seed-tools" id="seed-form">
+          <label for="seed">Puzzle seed</label>
+          <div class="seed-row">
+            <input id="seed" type="text" inputmode="numeric" autocomplete="off" placeholder="Enter a seed" aria-describedby="seed-help">
+            <button class="secondary-button" id="load-seed" type="submit">Load seed</button>
+          </div>
+          <p id="seed-help">Use the same seed and difficulty to replay a puzzle. New game picks a fresh seed.</p>
+        </form>
+        <div class="share-tools">
+          <label for="puzzle-link">Link to this puzzle</label>
+          <input id="puzzle-link" type="text" readonly>
+          <button class="secondary-button" id="copy-link" type="button" disabled>Copy puzzle link</button>
+        </div>
+
         <div class="puzzle-heading">
           <div>
             <p class="eyebrow">Generated locally</p>
             <p class="puzzle-status" id="puzzle-status">Medium · 34 clues</p>
+            <p class="seed-status" id="seed-status"></p>
           </div>
           <span class="status-dot" id="status-dot" aria-label="Puzzle ready"></span>
         </div>
