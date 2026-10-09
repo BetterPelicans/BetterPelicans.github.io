@@ -40,6 +40,11 @@
       name: "Hard",
       targetClues: 28,
       description: "Fewer givens and longer chains of logic."
+    }),
+    extreme: Object.freeze({
+      name: "Extreme",
+      maxClues: 27,
+      description: "Minimal clues with locked candidates and naked pairs."
     })
   });
 
@@ -52,6 +57,10 @@
   // order and difficulty settings when adding future generator versions.
   var GENERATOR_VERSION = "1";
 
+  function generatorVersion(difficulty) {
+    return difficulty === "extreme" ? "2" : GENERATOR_VERSION;
+  }
+
   function parseSeed(seed) {
     var text = String(seed).trim();
     var value = Number(text);
@@ -62,7 +71,8 @@
   }
 
   function generateSeededPuzzle(difficulty, seed, version) {
-    if (String(version || GENERATOR_VERSION) !== GENERATOR_VERSION) {
+    var expectedVersion = generatorVersion(difficulty);
+    if (String(version || expectedVersion) !== expectedVersion) {
       throw new Error("This puzzle uses an unsupported generator version.");
     }
     if (!Object.prototype.hasOwnProperty.call(DIFFICULTIES, difficulty)) {
@@ -71,7 +81,7 @@
     var value = parseSeed(seed);
     var game = generatePuzzle(difficulty, createRng(value));
     game.seed = value;
-    game.version = GENERATOR_VERSION;
+    game.version = expectedVersion;
     return game;
   }
 
@@ -371,10 +381,174 @@
     return clues;
   }
 
+  var UNITS = [];
+  for (var unit = 0; unit < 27; unit += 1) {
+    var cells = [];
+    for (var offset = 0; offset < SIZE; offset += 1) {
+      if (unit < 9) {
+        cells.push(unit * SIZE + offset);
+      } else if (unit < 18) {
+        cells.push(offset * SIZE + unit - 9);
+      } else {
+        var box = unit - 18;
+        cells.push((Math.floor(box / 3) * 3 + Math.floor(offset / 3)) * SIZE + (box % 3) * 3 + offset % 3);
+      }
+    }
+    UNITS.push(cells);
+  }
+
+  // Separate from the frozen version-1 solver to preserve existing seeds.
+  function solveExtremeLogically(board) {
+    if (!isValidBoard(board)) {
+      return null;
+    }
+    var work = new Uint8Array(board);
+    var masks = createMasks(work);
+    var candidates = new Int16Array(CELL_COUNT);
+    var steps = [];
+    for (var index = 0; index < CELL_COUNT; index += 1) {
+      candidates[index] = work[index] ? 0 : candidateMask(index, masks);
+    }
+
+    function eliminate(technique, indices, mask, reason) {
+      var removals = [];
+      indices.forEach(function (index) {
+        var removed = candidates[index] & mask;
+        if (removed) {
+          removals.push({ index: index, mask: removed });
+          candidates[index] &= ~removed;
+        }
+      });
+      if (!removals.length) {
+        return false;
+      }
+      reason.technique = technique;
+      reason.removals = removals;
+      steps.push(reason);
+      return true;
+    }
+
+    while (true) {
+      var empty = 0;
+      var next = null;
+      for (var index = 0; index < CELL_COUNT; index += 1) {
+        if (work[index]) {
+          candidates[index] = 0;
+          continue;
+        }
+        empty += 1;
+        candidates[index] &= candidateMask(index, masks);
+        if (!candidates[index]) {
+          return null;
+        }
+        if (!next && BIT_COUNT[candidates[index]] === 1) {
+          next = { index: index, value: BIT_TO_DIGIT[candidates[index]], technique: "naked-single" };
+        }
+      }
+      if (!empty) {
+        return { solution: work, steps: steps };
+      }
+      for (var unit = 0; unit < UNITS.length && !next; unit += 1) {
+        for (var bit = 1; bit <= FULL_MASK && !next; bit <<= 1) {
+          var positions = UNITS[unit].filter(function (index) { return candidates[index] & bit; });
+          if (positions.length === 1) {
+            next = { index: positions[0], value: BIT_TO_DIGIT[bit], technique: "hidden-single", unit: unit };
+          }
+        }
+      }
+      if (next) {
+        place(work, masks, next.index, next.value);
+        steps.push(next);
+        continue;
+      }
+
+      var changed = false;
+      for (var unit = 0; unit < UNITS.length && !changed; unit += 1) {
+        for (var bit = 1; bit <= FULL_MASK && !changed; bit <<= 1) {
+          var positions = UNITS[unit].filter(function (index) { return candidates[index] & bit; });
+          if (positions.length < 2 || positions.length > 3) {
+            continue;
+          }
+          for (var target = 0; target < UNITS.length && !changed; target += 1) {
+            if (target === unit || !positions.every(function (index) { return UNITS[target].indexOf(index) >= 0; })) {
+              continue;
+            }
+            var outside = UNITS[target].filter(function (index) { return UNITS[unit].indexOf(index) < 0; });
+            changed = eliminate("locked-candidate", outside, bit, { sourceUnit: unit, targetUnit: target, value: BIT_TO_DIGIT[bit] });
+          }
+        }
+      }
+      for (var unit = 0; unit < UNITS.length && !changed; unit += 1) {
+        for (var cell = 0; cell < SIZE && !changed; cell += 1) {
+          var pairMask = candidates[UNITS[unit][cell]];
+          if (BIT_COUNT[pairMask] !== 2) {
+            continue;
+          }
+          var pair = UNITS[unit].filter(function (index) { return candidates[index] === pairMask; });
+          if (pair.length !== 2) {
+            continue;
+          }
+          var others = UNITS[unit].filter(function (index) { return pair.indexOf(index) < 0; });
+          changed = eliminate("naked-pair", others, pairMask, { unit: unit, cells: pair, mask: pairMask });
+        }
+      }
+      if (!changed) {
+        return null;
+      }
+    }
+  }
+
+  function generateExtremePuzzle(random) {
+    var best = null;
+    var indexes = [];
+    for (var index = 0; index < CELL_COUNT; index += 1) {
+      indexes.push(index);
+    }
+    // Search several grids, retaining the sparsest verified result. This is
+    // bounded local minimization, not a claim of a global minimum clue count.
+    for (var attempt = 0; attempt < 16; attempt += 1) {
+      var solution = new Uint8Array(CELL_COUNT);
+      if (!fillBoard(solution, random)) {
+        continue;
+      }
+      var puzzle = new Uint8Array(solution);
+      var changed;
+      do {
+        changed = false;
+        shuffle(indexes, random);
+        for (var i = 0; i < indexes.length; i += 1) {
+          var cell = indexes[i];
+          var saved = puzzle[cell];
+          if (!saved) {
+            continue;
+          }
+          puzzle[cell] = 0;
+          if (solveExtremeLogically(puzzle) && countSolutions(puzzle, 2) === 1) {
+            changed = true;
+          } else {
+            puzzle[cell] = saved;
+          }
+        }
+      } while (changed);
+      var clues = countClues(puzzle);
+      // Extreme must require more than Hard's singles, as well as fewer clues.
+      if (clues <= DIFFICULTIES.extreme.maxClues && !solveLogically(puzzle) && (!best || clues < best.clues)) {
+        best = { difficulty: "extreme", clues: clues, puzzle: puzzle, solution: solution };
+      }
+    }
+    if (!best) {
+      throw new Error("Could not generate an Extreme puzzle using the supported logical techniques. Try another seed.");
+    }
+    return best;
+  }
+
   function generatePuzzle(difficulty, random) {
     var key = normalizeDifficulty(difficulty);
     var config = DIFFICULTIES[key];
     var rng = typeof random === "function" ? random : Math.random;
+    if (key === "extreme") {
+      return generateExtremePuzzle(rng);
+    }
     var indexes = [];
 
     for (var index = 0; index < CELL_COUNT; index += 1) {
@@ -420,6 +594,7 @@
     CELL_COUNT: CELL_COUNT,
     DIFFICULTIES: DIFFICULTIES,
     GENERATOR_VERSION: GENERATOR_VERSION,
+    generatorVersion: generatorVersion,
     parseSeed: parseSeed,
     generateSeededPuzzle: generateSeededPuzzle,
     createRng: createRng,
@@ -427,6 +602,7 @@
     countSolutions: countSolutions,
     solveBoard: solveBoard,
     solveLogically: solveLogically,
+    solveExtremeLogically: solveExtremeLogically,
     isValidBoard: isValidBoard,
     countClues: countClues
   };
