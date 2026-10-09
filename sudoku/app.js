@@ -9,6 +9,7 @@
   var boardElement = document.getElementById("board");
   var difficultyElement = document.getElementById("difficulty");
   var newGameButton = document.getElementById("new-game");
+  var printButton = document.getElementById("print-puzzle");
   var undoButton = document.getElementById("undo");
   var autoCheckElement = document.getElementById("auto-check");
   var numberPad = document.getElementById("number-pad");
@@ -234,6 +235,7 @@
     notesButton.disabled = !selectedIsEditable || state.isGenerating || state.isComplete;
     undoButton.disabled = state.history.length === 0 || state.isGenerating;
     newGameButton.disabled = state.isGenerating;
+    printButton.disabled = state.isGenerating || !state.puzzle;
     difficultyElement.disabled = state.isGenerating;
     boardElement.setAttribute("aria-busy", state.isGenerating ? "true" : "false");
     boardElement.classList.toggle("is-generating", state.isGenerating);
@@ -443,6 +445,11 @@
   });
 
   newGameButton.addEventListener("click", startNewGame);
+  printButton.addEventListener("click", function () {
+    if (!printButton.disabled) {
+      window.print();
+    }
+  });
   undoButton.addEventListener("click", undo);
   eraseButton.addEventListener("click", eraseSelected);
   notesButton.addEventListener("click", function () {
