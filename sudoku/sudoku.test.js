@@ -3,6 +3,34 @@ const assert = require("node:assert/strict");
 const { test } = require("node:test");
 const engine = require("./sudoku.js");
 
+test("Version 1 replays exact published puzzle fixtures", () => {
+  const fixtures = {
+    "very-easy": "867000091435190276290600348029000630070024859048569702604732905002901063903480027",
+    easy: "867000091405090276200000348029000600070024050008569702604732905000901003903080020",
+    medium: "867000001405090270200000348029000600070024050008069700004732900000901000900080020",
+    hard: "807000001405090200000000348020000600070024050008060700004730900000901000900080020"
+  };
+  for (const [difficulty, puzzle] of Object.entries(fixtures)) {
+    const game = engine.generateSeededPuzzle(difficulty, "42", "1");
+    assert.equal(Array.from(game.puzzle).join(""), puzzle);
+    assert.equal(game.seed, 42);
+    assert.equal(game.version, "1");
+  }
+});
+
+test("Seed input is validated without truncation or collisions", () => {
+  assert.equal(engine.parseSeed(" 00042 "), 42);
+  assert.equal(engine.parseSeed("4294967295"), 4294967295);
+  for (const seed of ["", "0", "-1", "1.5", "1e3", "0x10", "hello", "4294967296", null, undefined]) {
+    assert.throws(() => engine.parseSeed(seed));
+  }
+  assert.throws(() => engine.generateSeededPuzzle("easy", 42, "2"), /unsupported/);
+  assert.throws(() => engine.generateSeededPuzzle("unknown", 42), /difficulty/);
+  for (const seed of [1, 4294967295]) {
+    assert.deepEqual(engine.generateSeededPuzzle("easy", seed), engine.generateSeededPuzzle("easy", String(seed), "1"));
+  }
+});
+
 function unitCells(unit) {
   return Array.from({ length: 9 }, (_, offset) => {
     if (unit < 9) return unit * 9 + offset;
