@@ -68,6 +68,23 @@ use **New game** to generate a puzzle in the selected mode.
 Printing, seeds and sharing are grouped in **Special options** below the
 number pad. Difficulty, auto-check and undo stay above the board.
 
+## Completion history
+
+Puzzles completed after this update are recorded automatically in this
+browser's local storage. The latest 100 completions appear below Special
+options, with completion date/time, difficulty, clue count, seed and version.
+**Replay** starts the same puzzle from its original clues.
+
+Only a correctly completed grid is recorded. Undoing and completing the same
+game again does not duplicate its record; starting a fresh replay and finishing
+it does create a new completion. The history records the puzzle being played,
+even if another difficulty was selected without generating a new game.
+
+History stays on the current browser and device and can be lost when browser
+site data is cleared. It does not sync across devices or recover older
+completions. If storage is unavailable, the game still works and keeps new
+history for the current page session, with that limitation shown in the UI.
+
 ## Tests
 
 ```sh
