@@ -21,6 +21,11 @@
   }
 
   var DIFFICULTIES = Object.freeze({
+    "very-easy": Object.freeze({
+      name: "Very easy",
+      targetClues: 54,
+      description: "Extra clues; each move needs only a single-candidate deduction."
+    }),
     easy: Object.freeze({
       name: "Easy",
       targetClues: 42,
@@ -261,6 +266,74 @@
     return board && board.length === CELL_COUNT && !!createMasks(board);
   }
 
+  // No guesses or access to the stored solution: every placement is forced by
+  // the current row, column and box. The trace is a replayable solving path.
+  function solveLogically(board, nakedSinglesOnly) {
+    if (!isValidBoard(board)) {
+      return null;
+    }
+    var work = new Uint8Array(board);
+    var masks = createMasks(work);
+    var steps = [];
+
+    while (true) {
+      var candidates = new Int16Array(CELL_COUNT);
+      var emptyCount = 0;
+      var next = null;
+      for (var index = 0; index < CELL_COUNT; index += 1) {
+        if (work[index]) {
+          continue;
+        }
+        emptyCount += 1;
+        candidates[index] = candidateMask(index, masks);
+        if (!candidates[index]) {
+          return null;
+        }
+        if (!next && BIT_COUNT[candidates[index]] === 1) {
+          next = { index: index, value: BIT_TO_DIGIT[candidates[index]], technique: "naked-single" };
+        }
+      }
+      if (!emptyCount) {
+        return { solution: work, steps: steps };
+      }
+
+      if (!next && !nakedSinglesOnly) {
+        for (var unit = 0; unit < 27 && !next; unit += 1) {
+          var cells = [];
+          for (var offset = 0; offset < SIZE; offset += 1) {
+            if (unit < 9) {
+              cells.push(unit * SIZE + offset);
+            } else if (unit < 18) {
+              cells.push(offset * SIZE + unit - 9);
+            } else {
+              var box = unit - 18;
+              cells.push((Math.floor(box / 3) * 3 + Math.floor(offset / 3)) * SIZE +
+                (box % 3) * 3 + offset % 3);
+            }
+          }
+          for (var bit = 1; bit <= FULL_MASK && !next; bit <<= 1) {
+            var onlyIndex = -1;
+            var count = 0;
+            for (var cell = 0; cell < cells.length; cell += 1) {
+              if (candidates[cells[cell]] & bit) {
+                onlyIndex = cells[cell];
+                count += 1;
+              }
+            }
+            if (count === 1) {
+              next = { index: onlyIndex, value: BIT_TO_DIGIT[bit], technique: "hidden-single", unit: unit };
+            }
+          }
+        }
+      }
+      if (!next) {
+        return null;
+      }
+      place(work, masks, next.index, next.value);
+      steps.push(next);
+    }
+  }
+
   function countClues(board) {
     var clues = 0;
     for (var index = 0; index < board.length; index += 1) {
@@ -295,7 +368,7 @@
         var cell = indexes[i];
         var saved = puzzle[cell];
         puzzle[cell] = 0;
-        if (countSolutions(puzzle, 2) === 1) {
+        if (solveLogically(puzzle, key === "very-easy") && countSolutions(puzzle, 2) === 1) {
           clues -= 1;
         } else {
           puzzle[cell] = saved;
@@ -323,6 +396,7 @@
     generatePuzzle: generatePuzzle,
     countSolutions: countSolutions,
     solveBoard: solveBoard,
+    solveLogically: solveLogically,
     isValidBoard: isValidBoard,
     countClues: countClues
   };

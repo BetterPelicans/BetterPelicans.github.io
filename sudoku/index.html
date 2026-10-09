@@ -27,6 +27,7 @@
           <label class="difficulty-field" for="difficulty">
             <span>Difficulty</span>
             <select id="difficulty">
+              <option value="very-easy">Very easy</option>
               <option value="easy">Easy</option>
               <option value="medium" selected>Medium</option>
               <option value="hard">Hard</option>
@@ -44,6 +45,8 @@
             <span>Undo</span>
           </button>
         </div>
+
+        <button class="secondary-button print-button" id="print-puzzle" type="button" disabled>Print puzzle</button>
 
         <div class="puzzle-heading">
           <div>
@@ -97,7 +100,7 @@
         </div>
       </section>
 
-      <footer class="app-footer">Every puzzle is made on this device and has one solution.</footer>
+      <footer class="app-footer">Every puzzle is made on this device, has one solution, and can be solved using logical deductions without guessing.</footer>
     </main>
 
     <script src="sudoku.js"></script>
