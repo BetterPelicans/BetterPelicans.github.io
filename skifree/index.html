@@ -98,7 +98,7 @@
   <h1><span class="thin">THE CLASSIC, REMASTERED</span>SkiFree</h1>
   <p class="tagline">Same mountain. Same monster. Now with carving, gates, air time — and a yeti you can actually escape.</p>
   <div class="howto">
-    <div>👆 <b>Drag</b> to carve — hard carves spray snow and scrub speed</div>
+    <div>🕹 <b>Touch anywhere</b> — a joystick appears under your thumb: push to carve, pull down to tuck, push up to brake</div>
     <div>🎿 Crashes cost speed, not the run. <b>Only the yeti ends it</b></div>
     <div>🛷 Hit a jump, lean in the air, <b>land clean</b> for bonus points</div>
   </div>
@@ -253,17 +253,43 @@ function spawnGate(atDist){
   const gapW=srand(96,120)*S, cx=srand(gapW/2+14, W-gapW/2-14);
   entities.push({kind:'gate', x:cx, wy:atDist, gap:gapW, left:cx-gapW/2, right:cx+gapW/2, judged:false});
 }
-/* ---------------- input ---------------- */
-let dragging=false;
-function setTarget(clientX){ player.targetX=clamp(clientX, 16, W-16); }
-canvas.addEventListener('pointerdown', e=>{ dragging=true; canvas.setPointerCapture(e.pointerId); setTarget(e.clientX); });
-canvas.addEventListener('pointermove', e=>{ if(dragging) setTarget(e.clientX); });
-['pointerup','pointercancel'].forEach(ev=>canvas.addEventListener(ev, ()=>{ dragging=false; }));
+/* ---------------- input: dynamic floating joystick ----------------
+   The stick spawns where the thumb lands. Deflection (not position)
+   steers: horizontal = carve, down = tuck, up = brake/check.
+   Past the radius, the base follows the thumb (dynamic stick), so
+   you never run out of travel. Release and the skier straightens. */
+const joy={ active:false, ox:0, oy:0, kx:0, ky:0, x:0, y:0 };   // x/y = analog input -1..1
+const JOY_R=58, JOY_DZ=0.14;
+let keyX=0, keyY=0;
+function joyUpdate(cx, cy){
+  let dx=cx-joy.ox, dy=cy-joy.oy;
+  let mag=Math.hypot(dx,dy);
+  if(mag>JOY_R*S){ // dynamic: base slides after the thumb, keeping the knob at the rim
+    joy.ox += dx/mag*(mag-JOY_R*S); joy.oy += dy/mag*(mag-JOY_R*S);
+    dx=cx-joy.ox; dy=cy-joy.oy; mag=JOY_R*S;
+  }
+  joy.kx=joy.ox+dx; joy.ky=joy.oy+dy;
+  const n=mag/(JOY_R*S);                                   // deflection 0..1
+  if(n<JOY_DZ || mag<0.001){ joy.x=0; joy.y=0; }           // radial dead zone
+  else { const m=Math.min(1,(n-JOY_DZ)/(1-JOY_DZ));        // rescale past the dead zone
+         joy.x=clamp(dx/mag*m,-1,1); joy.y=clamp(dy/mag*m,-1,1); }
+}
+canvas.addEventListener('pointerdown', e=>{ joy.active=true; joy.ox=joy.kx=e.clientX; joy.oy=joy.ky=e.clientY; joy.x=0; joy.y=0; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointermove', e=>{ if(joy.active) joyUpdate(e.clientX, e.clientY); });
+['pointerup','pointercancel'].forEach(ev=>canvas.addEventListener(ev, ()=>{ joy.active=false; joy.x=0; joy.y=0; }));
 window.addEventListener('keydown', e=>{
-  if(e.key==='ArrowLeft'){ player.targetX=clamp(player.targetX-44,16,W-16); e.preventDefault(); }
-  if(e.key==='ArrowRight'){ player.targetX=clamp(player.targetX+44,16,W-16); e.preventDefault(); }
+  if(e.key==='ArrowLeft'){ keyX=-1; e.preventDefault(); }
+  if(e.key==='ArrowRight'){ keyX=1; e.preventDefault(); }
+  if(e.key==='ArrowDown'){ keyY=1; e.preventDefault(); }
+  if(e.key==='ArrowUp'){ keyY=-1; e.preventDefault(); }
   if((e.key===' '||e.key==='Enter')&&state==='over') startGame(mode);
   if(e.key==='Escape'&&state==='playing') pauseGame();
+});
+window.addEventListener('keyup', e=>{
+  if(e.key==='ArrowLeft'&&keyX<0) keyX=0;
+  if(e.key==='ArrowRight'&&keyX>0) keyX=0;
+  if(e.key==='ArrowDown'&&keyY>0) keyY=0;
+  if(e.key==='ArrowUp'&&keyY<0) keyY=0;
 });
 document.addEventListener('gesturestart', e=>e.preventDefault());
 document.addEventListener('dblclick', e=>e.preventDefault());
@@ -335,9 +361,12 @@ function update(dt){
   if(zi!==zoneIdx){ zoneIdx=zi; if(dist>10) banner(zone.name, zone.id==='ice'?'Fast. Slippery. Good luck.':zone.id==='powder'?'Soft and slow — breathe':zone.id==='forest'?'The yeti hates it in here':zone.id==='lift'?'Mind the poles':'', 1700); }
 
   /* speed model */
+  const inX = joy.active? joy.x : keyX, inY = joy.active? joy.y : keyY;
   const zoneMax = zone.id==='ice'? 31 : zone.id==='powder'? 19 : 26;
   const rampMax = zoneMax + Math.min(6, dist/900);            // mountain gets steeper
   let target = rampMax;
+  if(inY>0.3) target+=3.5;                                    // tuck
+  else if(inY<-0.3) target-=7.5;                              // brake / check
   if(player.downT>0){ target=5; player.downT-=dt; }
   if(player.air>0) target=rampMax+2;
   const carveScrub = Math.abs(player.lean)*4.5;
@@ -371,16 +400,16 @@ function update(dt){
   for(const b of birds){ b.x+=b.vx*dt; b.y-=dt*7; b.ph+=dt*11; }
   birds=birds.filter(b=>b.x>-70&&b.x<W+70);
 
-  /* steering: player chases the finger; lean = carve */
-  const grip = zone.id==='ice'? 3.2 : zone.id==='powder'? 9 : 6.5;
-  const prevX=player.x;
+  /* steering: analog deflection drives lateral velocity; lean IS the carve */
+  const grip = (zone.id==='ice'? 3.4 : zone.id==='powder'? 9.5 : 6.8) * (inY<-0.3? 1.5 : 1);
   if(player.downT<=0){
-    player.x += (player.targetX-player.x)*Math.min(1, grip*dt*(player.air>0?0.55:1));
-    player.x=clamp(player.x, 14, W-14);
-  }
-  player.vx=(player.x-prevX)/Math.max(dt,.001);
-  const targetLean=clamp(player.vx/520,-1,1);
-  player.lean += (targetLean-player.lean)*Math.min(1,10*dt);
+    const maxLat=275*S*(player.air>0?0.6:1);
+    const wantVx=inX*maxLat;
+    player.vx += (wantVx-player.vx)*Math.min(1, grip*dt);
+    player.x=clamp(player.x + player.vx*dt, 14, W-14);
+    if(player.x<=14||player.x>=W-14) player.vx=0;
+  } else player.vx*=0.9;
+  player.lean += (inX-player.lean)*Math.min(1,12*dt);
   if(player.air<=0) player.rot += ((player.lean*0.45)-player.rot)*Math.min(1,12*dt);
 
   /* spray while carving */
@@ -390,8 +419,7 @@ function update(dt){
   /* airtime */
   if(player.air>0){
     player.airT+=dt;
-    const leanIn=clamp((player.targetX-player.x)/130,-1,1);
-    player.rot += leanIn*dt*1.9;                              // lean in the air at your peril
+    player.rot += inX*dt*1.9;                                 // lean in the air at your peril
     if(player.airT>=player.airDur){
       player.air=0;
       const a=Math.abs(player.rot);
@@ -718,7 +746,7 @@ function drawPlayer(t){
   ctx.beginPath(); ctx.moveTo(-6*s-spread,6*s); ctx.lineTo(-6*s-spread*0.4,17*s); ctx.moveTo(6*s+spread,6*s); ctx.lineTo(6*s+spread*0.4,17*s); ctx.stroke();
   // animated body: knees bend into the carve, tuck at speed, arms out in the air
   const bend=Math.abs(player.lean)*3.2*s;                       // knee bend
-  const tuck=(player.air<=0 && Math.abs(player.lean)<0.16 && speed>23)? 2.6*s : 0;  // speed tuck
+  const tuck=(player.air<=0 && Math.abs(player.lean)<0.16 && speed>23)? 2.6*s : (player.air<=0 && joy.y>0.3? 2.2*s : 0);  // speed tuck
   const crouch=bend*0.5+tuck;
   ctx.strokeStyle='#1e3a8a'; ctx.lineWidth=4.6*s;
   ctx.beginPath();
@@ -794,6 +822,17 @@ function render(t){
       const sx=(i%2? W-8-Math.random()*26 : 8+Math.random()*26), sy=Math.random()*H, ln=26+Math.random()*40;
       ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(sx,sy+ln); ctx.stroke();
     }
+  }
+  // the floating joystick, while the thumb is down
+  if(joy.active && state==='playing'){
+    ctx.beginPath(); ctx.arc(joy.ox, joy.oy, JOY_R*S, 0, TAU);
+    ctx.fillStyle='rgba(255,255,255,.13)'; ctx.fill();
+    ctx.lineWidth=2; ctx.strokeStyle='rgba(18,58,94,.4)'; ctx.stroke();
+    ctx.beginPath(); ctx.arc(joy.ox, joy.oy, 3.5, 0, TAU); ctx.fillStyle='rgba(18,58,94,.45)'; ctx.fill();
+    ctx.beginPath(); ctx.arc(joy.kx, joy.ky, 23*S, 0, TAU);
+    ctx.fillStyle='rgba(255,255,255,.72)'; ctx.fill();
+    ctx.strokeStyle='rgba(18,58,94,.5)'; ctx.stroke();
+    ctx.fillStyle='rgba(18,58,94,.65)'; ctx.beginPath(); ctx.arc(joy.kx, joy.ky, 7*S, 0, TAU); ctx.fill();
   }
   // floating texts
   ctx.textAlign='center'; ctx.font='800 '+(16*S+3)+'px ui-rounded, system-ui, sans-serif';
