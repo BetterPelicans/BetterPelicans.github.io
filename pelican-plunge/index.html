@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Pelican Plunge — Better Pelicans</title>
+<meta name="description" content="A one-thumb arcade game. Steer the pelican, snatch leaping fish, chain combos, dodge jellyfish and storm clouds.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0b3b4f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pelican Plunge">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b3b4f'/%3E%3Cellipse cx='30' cy='34' rx='16' ry='10' fill='%23faf9f6'/%3E%3Cpath d='M42 30 L60 36 L42 38 Q46 34 42 30z' fill='%23f59e0b'/%3E%3Ccircle cx='40' cy='29' r='2.4' fill='%231c1b18'/%3E%3Cpath d='M22 28 Q14 18 8 20 Q16 24 20 32z' fill='%23e7e2d6'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#0e2233; --paper:#fffdf7; --accent:#f59e0b; --accent2:#0ea5a4;
+    --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ height:100%; }
+  body{
+    margin:0; overflow:hidden; background:#0b3b4f; color:var(--paper);
+    font-family: ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    touch-action:none; overscroll-behavior:none; -webkit-user-select:none; user-select:none;
+    -webkit-touch-callout:none; position:fixed; inset:0;
+  }
+  #game{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+
+  /* ---------- HUD ---------- */
+  #hud{
+    position:absolute; left:0; right:0; top:0; pointer-events:none;
+    padding: calc(10px + var(--safe-top)) 14px 0;
+    display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+    opacity:0; transition:opacity .3s;
+  }
+  body.playing #hud{ opacity:1; }
+  .hud-left{ display:flex; flex-direction:column; gap:2px; }
+  #score{ font-size:34px; font-weight:800; line-height:1; letter-spacing:.5px;
+          text-shadow:0 2px 10px rgba(4,30,45,.45); font-variant-numeric:tabular-nums; }
+  #combo{ font-size:15px; font-weight:700; color:#ffd166; min-height:19px;
+          text-shadow:0 1px 6px rgba(4,30,45,.5); transition:transform .12s; }
+  #combo.pop{ transform:scale(1.25); }
+  #level{ font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; opacity:.85; }
+  .hud-right{ display:flex; flex-direction:column; align-items:flex-end; gap:6px; pointer-events:none; }
+  #hearts{ font-size:19px; letter-spacing:2px; text-shadow:0 2px 8px rgba(4,30,45,.45); }
+  #hearts .lost{ opacity:.28; filter:grayscale(1); }
+  .hud-btns{ display:flex; gap:8px; pointer-events:auto; }
+  .icon-btn{
+    width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,.35);
+    background:rgba(6,32,46,.42); color:#fff; font-size:19px; line-height:1;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  }
+  .icon-btn:active{ transform:scale(.92); }
+
+  /* ---------- Overlays ---------- */
+  .overlay{
+    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; text-align:center; padding:24px calc(20px) calc(24px + var(--safe-bottom));
+    background:linear-gradient(180deg, rgba(5,26,40,.18) 0%, rgba(5,26,40,.55) 78%);
+    transition:opacity .35s; z-index:5;
+  }
+  .overlay.hidden{ opacity:0; pointer-events:none; }
+  .badge{ font-size:11px; font-weight:800; letter-spacing:.22em; text-transform:uppercase;
+          color:#ffd166; border:1px solid rgba(255,209,102,.6); padding:5px 12px; border-radius:999px;
+          background:rgba(6,32,46,.35); margin-bottom:14px; }
+  h1{ margin:0 0 6px; font-size:clamp(40px, 11vw, 58px); font-weight:900; line-height:.98;
+      letter-spacing:.01em; text-shadow:0 4px 22px rgba(3,20,32,.55); }
+  h1 .thin{ display:block; font-size:.42em; font-weight:800; letter-spacing:.34em; color:#ffd166; margin-bottom:8px; }
+  .tagline{ margin:0 0 20px; font-size:17px; line-height:1.45; color:#eaf6ff; max-width:21em;
+            text-shadow:0 2px 10px rgba(3,20,32,.6); }
+  .howto{ display:grid; gap:8px; margin:0 0 24px; font-size:15px; line-height:1.35; color:#eaf6ff;
+          text-shadow:0 1px 8px rgba(3,20,32,.65); }
+  .howto b{ color:#ffd166; font-weight:800; }
+  .play-btn{
+    appearance:none; border:0; cursor:pointer; border-radius:999px;
+    padding:17px 46px; font:inherit; font-size:21px; font-weight:900; letter-spacing:.02em;
+    color:#3a2503; background:linear-gradient(180deg,#ffd166,#f59e0b);
+    box-shadow:0 10px 28px rgba(245,158,11,.45), inset 0 1px 0 rgba(255,255,255,.65);
+  }
+  .play-btn:active{ transform:scale(.96); }
+  .best-line{ margin-top:16px; font-size:14px; font-weight:700; color:#cfeaff; min-height:18px;
+              text-shadow:0 1px 8px rgba(3,20,32,.6); }
+  #final-score{ font-size:64px; font-weight:900; line-height:1; margin:2px 0 4px;
+                text-shadow:0 4px 22px rgba(3,20,32,.55); font-variant-numeric:tabular-nums; }
+  #final-note{ font-size:16px; color:#eaf6ff; margin:0 0 22px; text-shadow:0 2px 10px rgba(3,20,32,.6); }
+  .new-best{ color:#ffd166; font-weight:900; }
+  .home-link{ margin-top:20px; color:#cfeaff; font-size:14px; font-weight:600; text-decoration:none;
+              border-bottom:1px dotted rgba(207,234,255,.6); padding-bottom:1px; }
+  #paused .play-btn{ margin-top:6px; }
+</style>
+</head>
+<body>
+<canvas id="game" aria-label="Pelican Plunge game canvas"></canvas>
+
+<div id="hud" aria-hidden="true">
+  <div class="hud-left">
+    <div id="score">0</div>
+    <div id="combo"></div>
+    <div id="level">Breeze</div>
+  </div>
+  <div class="hud-right">
+    <div id="hearts"><span>❤️</span><span>❤️</span><span>❤️</span></div>
+    <div class="hud-btns">
+      <button class="icon-btn" id="mute-btn" aria-label="Toggle sound">🔊</button>
+      <button class="icon-btn" id="pause-btn" aria-label="Pause game">⏸</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="menu">
+  <div class="badge">Better Pelicans presents</div>
+  <h1><span class="thin">PELICAN</span>PLUNGE</h1>
+  <p class="tagline">Sunset over the Gulf. Dinner is leaping out of the water. You're the pelican.</p>
+  <div class="howto">
+    <div>👆 <b>Drag</b> anywhere to steer</div>
+    <div>🐟 Catch fish — <b>gold ones are worth 50</b></div>
+    <div>🔥 Chain quick catches to build your <b>combo</b></div>
+    <div>🪼 Dodge jellyfish &amp; storm clouds — <b>3 hits and you're grounded</b></div>
+  </div>
+  <button class="play-btn" id="play-btn">▶ &nbsp;Take off</button>
+  <div class="best-line" id="menu-best"></div>
+  <a class="home-link" href="../">← All Better Pelicans games</a>
+</div>
+
+<div class="overlay hidden" id="gameover">
+  <div class="badge">Grounded</div>
+  <h1 style="font-size:clamp(30px,8vw,42px)">Nice flying</h1>
+  <div id="final-score">0</div>
+  <p id="final-note"></p>
+  <button class="play-btn" id="again-btn">↻ &nbsp;Fly again</button>
+  <div class="best-line" id="over-best"></div>
+  <a class="home-link" href="../">← All Better Pelicans games</a>
+</div>
+
+<div class="overlay hidden" id="paused">
+  <div class="badge">Paused</div>
+  <h1 style="font-size:clamp(30px,8vw,42px)">Holding pattern</h1>
+  <p class="tagline">The fish aren't going anywhere. Well — they are, but slowly.</p>
+  <button class="play-btn" id="resume-btn">▶ &nbsp;Keep flying</button>
+  <a class="home-link" href="../">← All Better Pelicans games</a>
+</div>
+
+<script>
+'use strict';
+/* ============================================================
+   PELICAN PLUNGE — a one-thumb arcade game
+   Drag to steer. Catch leaping fish. Dodge the nasties.
+   Single file, no dependencies. © Better Pelicans.
+   ============================================================ */
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+const $ = id => document.getElementById(id);
+const scoreEl=$('score'), comboEl=$('combo'), levelEl=$('level'), heartsEl=$('hearts');
+
+let W=0, H=0, DPR=1, S=1;           // viewport + scale unit
+let waterY=0;
+
+function resize(){
+  DPR = Math.min(window.devicePixelRatio||1, 2);
+  W = window.innerWidth; H = window.innerHeight;
+  canvas.width = Math.round(W*DPR); canvas.height = Math.round(H*DPR);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  S = Math.max(.78, Math.min(1.25, W/390));
+  waterY = H*0.80;
+  if (pel.y > waterY-30) pel.y = waterY-30;
+}
+window.addEventListener('resize', resize);
+window.addEventListener('orientationchange', ()=>setTimeout(resize,60));
+
+/* ---------------- utils ---------------- */
+const rand=(a,b)=>a+Math.random()*(b-a);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const TAU=Math.PI*2;
+
+/* ---------------- audio (synth, no files) ---------------- */
+let AC=null, muted = localStorage.getItem('pp-muted')==='1';
+function audio(){
+  if(!AC){ try{ AC = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ AC=null; } }
+  if(AC && AC.state==='suspended') AC.resume();
+  return AC;
+}
+function tone(freq, dur, type, vol, when=0, slideTo=null){
+  if(muted) return; const ac=audio(); if(!ac) return;
+  const t=ac.currentTime+when, o=ac.createOscillator(), g=ac.createGain();
+  o.type=type; o.frequency.setValueAtTime(freq,t);
+  if(slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t+dur);
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(vol,t+0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.connect(g).connect(ac.destination); o.start(t); o.stop(t+dur+0.05);
+}
+const sfx = {
+  catch(combo){ const base=520+Math.min(combo,10)*45; tone(base,.12,'sine',.20); tone(base*1.5,.14,'sine',.16,.05); },
+  gold(){ [660,880,1180,1560].forEach((f,i)=>tone(f,.14,'triangle',.18,i*.06)); },
+  hurt(){ tone(190,.25,'sawtooth',.20,0,70); tone(90,.3,'square',.12,.02,50); },
+  splash(){ if(muted) return; const ac=audio(); if(!ac) return;
+    const len=ac.sampleRate*0.18, buf=ac.createBuffer(1,len,ac.sampleRate), d=buf.getChannelData(0);
+    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*(1-i/len);
+    const src=ac.createBufferSource(); src.buffer=buf;
+    const f=ac.createBiquadFilter(); f.type='lowpass'; f.frequency.value=900;
+    const g=ac.createGain(); g.gain.value=.12;
+    src.connect(f).connect(g).connect(ac.destination); src.start(); },
+  over(){ [392,330,262,196].forEach((f,i)=>tone(f,.26,'triangle',.18,i*.16)); },
+  start(){ [262,392,523].forEach((f,i)=>tone(f,.14,'triangle',.16,i*.07)); }
+};
+function buzz(ms){ if(navigator.vibrate) try{ navigator.vibrate(ms); }catch(e){} }
+
+/* ---------------- game state ---------------- */
+const LEVELS=[ {name:'Breeze', until:0}, {name:'Gust', until:20}, {name:'Gale', until:45}, {name:'Storm', until:75}, {name:'Pelicanado', until:Infinity} ];
+let state='menu';               // menu | playing | paused | over
+let score=0, best=+(localStorage.getItem('pp-best')||0);
+let lives=3, combo=0, comboTimer=0, elapsed=0, speed=0, shake=0, flash=0;
+let fishes=[], hazards=[], parts=[], texts=[], cloudsFar=[], cloudsNear=[], sparkles=[];
+let fishTimer=0, hazTimer=0, invincible=0, wingT=0, dist=0;
+
+const pel = { x:0, y:0, vy:0, targetY:0, tilt:0, r:24 };
+
+function reset(){
+  score=0; lives=3; combo=0; comboTimer=0; elapsed=0; dist=0; caught=0;
+  fishes=[]; hazards=[]; parts=[]; texts=[];
+  fishTimer=.4; hazTimer=2.2; invincible=0; shake=0; flash=0;
+  pel.y=H*0.42; pel.targetY=pel.y; pel.vy=0; pel.tilt=0;
+  updateHUD(true);
+}
+function levelIdx(){ let i=0; for(let k=0;k<LEVELS.length;k++) if(elapsed>=LEVELS[k].until) i=k; return i; }
+
+/* ---------------- scenery ---------------- */
+for(let i=0;i<7;i++) cloudsFar.push({x:Math.random(), y:rand(.05,.30), s:rand(.6,1.2), v:rand(.004,.009)});
+for(let i=0;i<5;i++) cloudsNear.push({x:Math.random(), y:rand(.08,.45), s:rand(.8,1.5), v:rand(.012,.022)});
+for(let i=0;i<26;i++) sparkles.push({x:Math.random(), ph:rand(0,TAU)});
+
+function spawnFish(){
+  const golden = Math.random()<0.14;
+  const x = W + 40;
+  const apex = rand(H*0.30, waterY-120*S);          // top of the leap
+  const vy = -Math.sqrt(2*1500*S*Math.max(60,(waterY-apex)));
+  fishes.push({ x, y:waterY+6, vx:-(speed*rand(.55,.8)+60*S), vy, golden,
+                rot:0, wag:rand(0,TAU), dead:false });
+  splash(x, waterY, 7);
+  sfx.splash();
+}
+function spawnHazard(){
+  const jelly = Math.random()<0.55;
+  const y = rand(H*0.16, waterY-110*S);
+  hazards.push({ kind: jelly?'jelly':'cloud', x:W+70, y, baseY:y,
+                 ph:rand(0,TAU), r:(jelly?23:34)*S, dead:false });
+}
+function splash(x,y,n){
+  for(let i=0;i<n;i++) parts.push({x:x+rand(-8,8), y, vx:rand(-40,40), vy:rand(-190,-60),
+    life:rand(.3,.6), t:0, kind:'drop', size:rand(1.5,3.2)});
+}
+function burst(x,y,color,n,kind='spark'){
+  for(let i=0;i<n;i++){ const a=rand(0,TAU), v=rand(40,220);
+    parts.push({x,y,vx:Math.cos(a)*v, vy:Math.sin(a)*v-40, life:rand(.3,.7), t:0, kind, color, size:rand(2,4.5)}); }
+}
+function floatText(x,y,str,color){ texts.push({x,y,str,color,t:0,life:1.05}); }
+
+/* ---------------- input ---------------- */
+let touching=false;
+function setTarget(clientY){ pel.targetY = clamp(clientY - 46, 54, waterY-16); }
+canvas.addEventListener('pointerdown', e=>{ touching=true; canvas.setPointerCapture(e.pointerId); setTarget(e.clientY); });
+canvas.addEventListener('pointermove', e=>{ if(touching) setTarget(e.clientY); });
+['pointerup','pointercancel'].forEach(ev=>canvas.addEventListener(ev, ()=>{ touching=false; }));
+window.addEventListener('keydown', e=>{
+  if(e.key==='ArrowUp'){ pel.targetY=clamp(pel.targetY-46,54,waterY-16); e.preventDefault(); }
+  if(e.key==='ArrowDown'){ pel.targetY=clamp(pel.targetY+46,54,waterY-16); e.preventDefault(); }
+  if(e.key===' '||e.key==='Enter'){
+    if(state==='menu') startGame(); else if(state==='over') startGame();
+    else if(state==='paused') resumeGame(); e.preventDefault();
+  }
+  if(e.key==='Escape'&&state==='playing') pauseGame();
+});
+document.addEventListener('gesturestart', e=>e.preventDefault());
+document.addEventListener('dblclick', e=>e.preventDefault());
+
+/* ---------------- flow ---------------- */
+function show(id){ ['menu','gameover','paused'].forEach(o=>$(o).classList.toggle('hidden', o!==id)); if(!id) ['menu','gameover','paused'].forEach(o=>$(o).classList.add('hidden')); }
+function startGame(){
+  audio(); reset(); state='playing'; document.body.classList.add('playing');
+  show(null); sfx.start();
+}
+function pauseGame(){ if(state!=='playing') return; state='paused'; show('paused'); }
+function resumeGame(){ if(state!=='paused') return; state='playing'; show(null); audio(); }
+function gameOver(){
+  state='over'; document.body.classList.remove('playing'); sfx.over(); buzz([60,40,60]);
+  const isBest = score>best;
+  if(isBest){ best=score; localStorage.setItem('pp-best', best); }
+  $('final-score').textContent = score.toLocaleString();
+  const fishNote = caught===1 ? '1 fish. The fish are telling stories about you.' :
+    caught<8  ? caught+' fish. A light snack.' :
+    caught<18 ? caught+' fish. The pouch runneth over.' :
+    caught<30 ? caught+' fish. Local legend status: rising.' :
+                caught+' fish. The Gulf is filing a complaint.';
+  $('final-note').innerHTML = fishNote + (isBest && score>0 ? ' <span class="new-best">★ New best!</span>' : '');
+  $('over-best').textContent = 'Best: '+best.toLocaleString();
+  show('gameover');
+}
+let caught=0;
+$('play-btn').addEventListener('click', startGame);
+$('again-btn').addEventListener('click', startGame);
+$('resume-btn').addEventListener('click', resumeGame);
+$('pause-btn').addEventListener('click', ()=>{ if(state==='playing') pauseGame(); });
+const muteBtn=$('mute-btn');
+function paintMute(){ muteBtn.textContent = muted?'🔇':'🔊'; }
+muteBtn.addEventListener('click', ()=>{ muted=!muted; localStorage.setItem('pp-muted', muted?'1':'0'); paintMute(); if(!muted) audio(); });
+paintMute();
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden&&state==='playing') pauseGame(); });
+$('menu-best').textContent = best>0 ? 'Best: '+best.toLocaleString() : '';
+
+/* ---------------- HUD ---------------- */
+function updateHUD(force){
+  scoreEl.textContent = score.toLocaleString();
+  comboEl.textContent = combo>=2 ? '🔥 Combo ×'+Math.min(combo,8)+' — '+combo+' in a row' : '';
+  levelEl.textContent = LEVELS[levelIdx()].name;
+  [...heartsEl.children].forEach((h,i)=>h.classList.toggle('lost', i>=lives));
+}
+
+/* ---------------- update ---------------- */
+function update(dt){
+  elapsed+=dt; dist+=speed*dt;
+  const li=levelIdx();
+  speed = (265 + li*38 + elapsed*1.15) * S;
+  wingT += dt*(6+speed/60);
+
+  // pelican follows the finger
+  const prevY=pel.y;
+  const k = touching? 14 : 7.5;
+  pel.y += (pel.targetY-pel.y)*Math.min(1, k*dt);
+  pel.vy = (pel.y-prevY)/Math.max(dt,0.001);
+  pel.tilt = clamp(pel.vy/2400, -0.5, 0.62);
+  pel.x = W*0.30;
+
+  if(comboTimer>0){ comboTimer-=dt; if(comboTimer<=0){ combo=0; updateHUD(); } }
+  if(invincible>0) invincible-=dt;
+  if(shake>0) shake=Math.max(0, shake-dt*26);
+  if(flash>0) flash=Math.max(0, flash-dt*2.4);
+
+  fishTimer-=dt;
+  if(fishTimer<=0){ spawnFish(); fishTimer=rand(.55,1.05)-Math.min(.35, li*.07); }
+  hazTimer-=dt;
+  if(hazTimer<=0){ spawnHazard(); hazTimer=rand(1.5,2.6)-Math.min(.8, li*.16); }
+
+  const G=1500*S;
+  for(const f of fishes){
+    f.x+=f.vx*dt; f.y+=f.vy*dt; f.vy+=G*dt; f.wag+=dt*14;
+    f.rot=Math.atan2(f.vy,f.vx); // head (+x in the drawing) follows the arc
+    if(f.y>waterY+14 && f.vy>0){ f.dead=true; splash(f.x,waterY,6); }
+    if(f.x<-50) f.dead=true;
+    // catch: beak zone in front of the pelican
+    const bx=pel.x+34*S, by=pel.y+6*S;
+    if(!f.dead && Math.hypot(f.x-bx, f.y-by) < 40*S){
+      f.dead=true; caught++;
+      combo++; comboTimer=2.6;
+      const mult=Math.min(combo,8), pts=(f.golden?50:10)*mult;
+      score+=pts;
+      if(f.golden){ sfx.gold(); burst(f.x,f.y,'#ffd166',16); floatText(f.x,f.y-18,'+'+pts,'#ffd166'); }
+      else { sfx.catch(combo); burst(f.x,f.y,'#bfefff',9); floatText(f.x,f.y-16,'+'+pts,'#ffffff'); }
+      comboEl.classList.remove('pop'); void comboEl.offsetWidth; comboEl.classList.add('pop');
+      buzz(12); updateHUD();
+    }
+  }
+  fishes=fishes.filter(f=>!f.dead);
+
+  for(const hz of hazards){
+    hz.x -= speed*dt*(hz.kind==='jelly'?0.92:1);
+    hz.ph += dt*2;
+    if(hz.kind==='jelly') hz.y = hz.baseY + Math.sin(hz.ph)*14*S;
+    if(hz.x<-90) hz.dead=true;
+    if(!hz.dead && invincible<=0){
+      const rr = hz.kind==='jelly'? hz.r*0.82 : hz.r*0.95;
+      if(Math.hypot(hz.x-pel.x, hz.y-pel.y) < rr + pel.r*S*0.78){
+        hz.dead=true; lives--; combo=0; comboTimer=0; invincible=1.6; shake=13; flash=0.55;
+        sfx.hurt(); buzz(90);
+        burst(pel.x,pel.y,'#ffffff',12,'feather'); burst(pel.x,pel.y, hz.kind==='jelly'?'#f9a8d4':'#94a3b8',10);
+        floatText(pel.x, pel.y-38, hz.kind==='jelly'?'Stung!':'Stormed!', '#fda4af');
+        updateHUD();
+        if(lives<=0){ gameOver(); }
+      }
+    }
+  }
+  hazards=hazards.filter(h=>!h.dead);
+
+  for(const p of parts){ p.t+=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=(p.kind==='drop'?620:300)*dt; }
+  parts=parts.filter(p=>p.t<p.life);
+  for(const t of texts){ t.t+=dt; t.y-=34*dt; }
+  texts=texts.filter(t=>t.t<t.life);
+  for(const c of cloudsFar){ c.x-=c.v*dt; if(c.x<-0.25) {c.x=1.1; c.y=rand(.05,.30);} }
+  for(const c of cloudsNear){ c.x-=c.v*dt; if(c.x<-0.3) {c.x=1.15; c.y=rand(.08,.45);} }
+}
+
+/* ---------------- drawing ---------------- */
+function skyAndSea(t){
+  const g=ctx.createLinearGradient(0,0,0,waterY);
+  g.addColorStop(0,'#2b6a8f'); g.addColorStop(.45,'#e8906f'); g.addColorStop(.78,'#f7b267'); g.addColorStop(1,'#ffd29d');
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,waterY+2);
+  // sun
+  const sunX=W*0.74, sunY=waterY-120*S;
+  const rg=ctx.createRadialGradient(sunX,sunY,4,sunX,sunY,120*S);
+  rg.addColorStop(0,'rgba(255,236,170,.95)'); rg.addColorStop(.25,'rgba(255,205,110,.55)'); rg.addColorStop(1,'rgba(255,205,110,0)');
+  ctx.fillStyle=rg; ctx.beginPath(); ctx.arc(sunX,sunY,120*S,0,TAU); ctx.fill();
+  ctx.fillStyle='#ffdf8e'; ctx.beginPath(); ctx.arc(sunX,sunY,34*S,0,TAU); ctx.fill();
+  // distant island silhouettes
+  ctx.fillStyle='rgba(38,74,96,.55)';
+  ctx.beginPath(); ctx.ellipse(W*0.13, waterY, 130*S, 15*S, 0, Math.PI, TAU); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(W*0.92, waterY, 90*S, 11*S, 0, Math.PI, TAU); ctx.fill();
+  // sea
+  const wg=ctx.createLinearGradient(0,waterY,0,H);
+  wg.addColorStop(0,'#2e7d9b'); wg.addColorStop(.25,'#1d5f7d'); wg.addColorStop(1,'#0b3b4f');
+  ctx.fillStyle=wg; ctx.fillRect(0,waterY,W,H-waterY);
+  // sun glitter path
+  ctx.save(); ctx.globalAlpha=.5; ctx.fillStyle='#ffd166';
+  for(const sp of sparkles){
+    const y=waterY+8+((sp.x*7919)%Math.max(20,(H-waterY-16)));
+    const x=((sp.x*W + Math.sin(t*1.3+sp.ph)*6) % W + W)%W;
+    const wdt=6+8*Math.abs(Math.sin(t*2+sp.ph));
+    if(Math.abs(x-sunX)<90*S) { ctx.globalAlpha=.25+.45*Math.abs(Math.sin(t*2.4+sp.ph)); ctx.fillRect(x-wdt/2, y, wdt, 2); }
+  }
+  ctx.restore();
+  // rolling wave lines
+  ctx.strokeStyle='rgba(255,255,255,.20)'; ctx.lineWidth=2; ctx.beginPath();
+  for(let layer=0; layer<3; layer++){
+    const wy=waterY+12+layer*((H-waterY)/3.2);
+    const off=(dist*(0.5+layer*0.35))%44;
+    for(let x=-44; x<W+44; x+=44){
+      ctx.moveTo(x-off, wy); ctx.quadraticCurveTo(x-off+11, wy-4.5*Math.sin(t*2+layer+x), x-off+22, wy);
+    }
+  }
+  ctx.stroke();
+  // waterline foam
+  ctx.strokeStyle='rgba(255,255,255,.55)'; ctx.lineWidth=2.5; ctx.beginPath();
+  for(let x=0;x<=W;x+=14){ const y=waterY+Math.sin(t*3+x*0.05)*1.6; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+  ctx.stroke();
+}
+function drawCloudShape(x,y,s,fill){
+  ctx.fillStyle=fill; ctx.beginPath();
+  ctx.arc(x,y,20*s,0,TAU); ctx.arc(x+20*s,y+3*s,15*s,0,TAU); ctx.arc(x-21*s,y+4*s,14*s,0,TAU);
+  ctx.arc(x+2*s,y+8*s,17*s,0,TAU); ctx.fill();
+}
+function drawSceneryClouds(){
+  for(const c of cloudsFar) drawCloudShape(c.x*W, c.y*H, c.s*S*0.9, 'rgba(255,214,170,.5)');
+  for(const c of cloudsNear) drawCloudShape(c.x*W, c.y*H, c.s*S, 'rgba(255,235,210,.75)');
+}
+function drawFish(f){
+  ctx.save(); ctx.translate(f.x,f.y); ctx.rotate(f.rot + Math.sin(f.wag)*0.08);
+  const L=(f.golden?30:26)*S, body=f.golden?'#ffd166':'#a8d8ea', belly=f.golden?'#fff3c4':'#e8f6fb';
+  ctx.fillStyle=body; ctx.beginPath(); ctx.ellipse(0,0,L*0.5,L*0.21,0,0,TAU); ctx.fill();
+  ctx.fillStyle=belly; ctx.beginPath(); ctx.ellipse(1,-L*0.05,L*0.4,L*0.13,0,0,TAU); ctx.fill();
+  // tail
+  const tw=Math.sin(f.wag)*0.35;
+  ctx.fillStyle=body; ctx.beginPath();
+  ctx.moveTo(-L*0.44,0); ctx.lineTo(-L*0.72,-L*0.24+tw*L*0.2); ctx.lineTo(-L*0.72,L*0.24+tw*L*0.2); ctx.closePath(); ctx.fill();
+  // fin + eye
+  ctx.beginPath(); ctx.moveTo(-L*0.02,-L*0.16); ctx.lineTo(L*0.14,-L*0.34); ctx.lineTo(L*0.2,-L*0.14); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='#12303f'; ctx.beginPath(); ctx.arc(L*0.3,-L*0.03,L*0.045+1.2,0,TAU); ctx.fill();
+  if(f.golden){ ctx.fillStyle='rgba(255,255,255,.85)'; ctx.beginPath(); ctx.arc(L*0.05,-L*0.1,2.2,0,TAU); ctx.fill(); }
+  ctx.restore();
+}
+function drawJelly(hz){
+  ctx.save(); ctx.translate(hz.x,hz.y);
+  const pulse=1+Math.sin(hz.ph*2.2)*0.07, r=hz.r;
+  ctx.fillStyle='rgba(244,114,182,.88)';
+  ctx.beginPath(); ctx.arc(0,0,r*pulse,Math.PI,TAU); ctx.quadraticCurveTo(r*pulse, r*0.5, 0, r*0.42);
+  ctx.quadraticCurveTo(-r*pulse, r*0.5, -r*pulse, 0); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.5)'; ctx.beginPath(); ctx.arc(-r*0.35,-r*0.35,r*0.18,0,TAU); ctx.fill();
+  ctx.strokeStyle='rgba(244,114,182,.75)'; ctx.lineWidth=3*S; ctx.lineCap='round';
+  for(let i=-2;i<=2;i++){
+    ctx.beginPath(); ctx.moveTo(i*r*0.32, r*0.4);
+    ctx.quadraticCurveTo(i*r*0.32+Math.sin(hz.ph*3+i)*6, r*0.85, i*r*0.32+Math.cos(hz.ph*2.4+i)*7, r*1.25);
+    ctx.stroke();
+  }
+  ctx.fillStyle='#7e103f'; ctx.beginPath(); ctx.arc(-r*0.28,-r*0.12,2.4,0,TAU); ctx.arc(r*0.28,-r*0.12,2.4,0,TAU); ctx.fill();
+  ctx.restore();
+}
+function drawStorm(hz){
+  ctx.save(); ctx.translate(hz.x,hz.y);
+  drawCloudShape(0,0,S*1.15,'rgba(71,85,105,.92)');
+  drawCloudShape(-8*S,6*S,S*0.9,'rgba(51,65,85,.95)');
+  // grumpy face + bolt
+  ctx.fillStyle='#e2e8f0'; ctx.beginPath(); ctx.arc(-11*S,-2*S,2.6,0,TAU); ctx.arc(11*S,-2*S,2.6,0,TAU); ctx.fill();
+  ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=2.2*S; ctx.beginPath(); ctx.moveTo(-8*S,8*S); ctx.lineTo(8*S,8*S); ctx.stroke();
+  ctx.fillStyle='#fde047'; ctx.beginPath();
+  ctx.moveTo(2*S,14*S); ctx.lineTo(-6*S,28*S); ctx.lineTo(0*S,28*S); ctx.lineTo(-3*S,38*S); ctx.lineTo(8*S,24*S); ctx.lineTo(2*S,24*S); ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+function drawPelican(t){
+  const blink = invincible>0 && Math.floor(t*14)%2===0;
+  ctx.save(); ctx.translate(pel.x,pel.y); ctx.rotate(pel.tilt);
+  if(blink) ctx.globalAlpha=0.35;
+  const s=S;
+  // far wing
+  const flap=Math.sin(wingT)*0.55 - 0.15;
+  ctx.save(); ctx.translate(-4*s,-4*s); ctx.rotate(flap*0.8+0.5);
+  ctx.fillStyle='#ddd6c4'; ctx.beginPath(); ctx.ellipse(-16*s,0,20*s,6.5*s,-0.5,0,TAU); ctx.fill(); ctx.restore();
+  // tail
+  ctx.fillStyle='#e7e2d6'; ctx.beginPath();
+  ctx.moveTo(-24*s,0); ctx.lineTo(-40*s,-6*s); ctx.lineTo(-38*s,5*s); ctx.closePath(); ctx.fill();
+  // body
+  const bg=ctx.createLinearGradient(0,-16*s,0,16*s);
+  bg.addColorStop(0,'#ffffff'); bg.addColorStop(1,'#e9e2d0');
+  ctx.fillStyle=bg; ctx.beginPath(); ctx.ellipse(0,0,27*s,15*s,0,0,TAU); ctx.fill();
+  // near wing
+  ctx.save(); ctx.translate(-2*s,-3*s); ctx.rotate(flap);
+  const wg=ctx.createLinearGradient(0,0,-30*s,10*s); wg.addColorStop(0,'#f7f2e4'); wg.addColorStop(1,'#d9d0ba');
+  ctx.fillStyle=wg; ctx.beginPath(); ctx.ellipse(-17*s,2*s,21*s,7*s,-0.35,0,TAU); ctx.fill(); ctx.restore();
+  // neck + head
+  ctx.strokeStyle='#fbf8ef'; ctx.lineWidth=11*s; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(16*s,-6*s); ctx.quadraticCurveTo(26*s,-13*s,31*s,-11*s); ctx.stroke();
+  ctx.fillStyle='#fffdf6'; ctx.beginPath(); ctx.arc(33*s,-11*s,9.5*s,0,TAU); ctx.fill();
+  // crest
+  ctx.strokeStyle='#e7e2d6'; ctx.lineWidth=3*s;
+  ctx.beginPath(); ctx.moveTo(27*s,-18*s); ctx.quadraticCurveTo(24*s,-24*s,19*s,-23*s); ctx.stroke();
+  // beak + pouch (opens a touch when a fish is near)
+  let open=0; for(const f of fishes){ if(Math.abs(f.x-(pel.x+40*s))<70 && Math.abs(f.y-pel.y)<60) { open=3.5*s; break; } }
+  ctx.fillStyle='#f59e0b'; ctx.beginPath();
+  ctx.moveTo(38*s,-13*s); ctx.lineTo(66*s,-6*s+open*0.3); ctx.lineTo(39*s,-6*s); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='#fbbf24'; ctx.beginPath();
+  ctx.moveTo(39*s,-6*s); ctx.lineTo(64*s,-5*s+open*0.3); ctx.quadraticCurveTo(52*s, 2*s+open, 41*s, 0*s); ctx.closePath(); ctx.fill();
+  // eye
+  ctx.fillStyle='#1c1b18'; ctx.beginPath(); ctx.arc(36*s,-12*s,2.3*s,0,TAU); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(36.8*s,-12.8*s,0.8*s,0,TAU); ctx.fill();
+  ctx.restore();
+}
+function drawParts(){
+  for(const p of parts){
+    const a=1-p.t/p.life;
+    if(p.kind==='drop'){ ctx.fillStyle=`rgba(190,235,255,${a})`; ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,TAU); ctx.fill(); }
+    else if(p.kind==='feather'){ ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.t*6+p.x); ctx.fillStyle=`rgba(255,255,255,${a})`;
+      ctx.beginPath(); ctx.ellipse(0,0,p.size*1.7,p.size*0.7,0,0,TAU); ctx.fill(); ctx.restore(); }
+    else { ctx.fillStyle=p.color; ctx.globalAlpha=a; ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,TAU); ctx.fill(); ctx.globalAlpha=1; }
+  }
+}
+function drawTexts(){
+  ctx.textAlign='center'; ctx.font=`800 ${17*S+4}px ui-rounded, system-ui, sans-serif`;
+  for(const t of texts){
+    ctx.globalAlpha=1-t.t/t.life;
+    ctx.lineWidth=4; ctx.strokeStyle='rgba(5,30,45,.55)';
+    ctx.strokeText(t.str,t.x,t.y); ctx.fillStyle=t.color; ctx.fillText(t.str,t.x,t.y);
+  }
+  ctx.globalAlpha=1;
+}
+function render(t){
+  ctx.clearRect(0,0,W,H);
+  ctx.save();
+  if(shake>0) ctx.translate(rand(-shake,shake)*0.6, rand(-shake,shake)*0.6);
+  skyAndSea(t);
+  drawSceneryClouds();
+  for(const f of fishes) drawFish(f);
+  for(const hz of hazards) hz.kind==='jelly'?drawJelly(hz):drawStorm(hz);
+  drawParts();
+  drawPelican(t);
+  drawTexts();
+  ctx.restore();
+  if(flash>0){ ctx.fillStyle=`rgba(244,63,94,${flash*0.32})`; ctx.fillRect(0,0,W,H); }
+  // gentle vignette
+  const v=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*0.42, W/2,H/2, Math.max(W,H)*0.78);
+  v.addColorStop(0,'rgba(0,0,0,0)'); v.addColorStop(1,'rgba(3,18,28,.28)');
+  ctx.fillStyle=v; ctx.fillRect(0,0,W,H);
+}
+
+/* ---------------- main loop ---------------- */
+let last=performance.now();
+function frame(now){
+  requestAnimationFrame(frame);
+  let dt=(now-last)/1000; last=now;
+  dt=Math.min(dt,0.05);
+  const t=now/1000;
+  if(state==='playing') update(dt);
+  else {
+    // menu idle drift: pelican bobs, world scrolls slowly
+    speed=90*S; dist+=speed*dt; wingT+=dt*5;
+    pel.x=W*0.30; pel.y=H*0.42+Math.sin(t*1.6)*10; pel.tilt=Math.sin(t*1.6+0.6)*0.08;
+    for(const c of cloudsFar){ c.x-=c.v*dt; if(c.x<-0.25){c.x=1.1; c.y=rand(.05,.30);} }
+    for(const c of cloudsNear){ c.x-=c.v*dt; if(c.x<-0.3){c.x=1.15; c.y=rand(.08,.45);} }
+    for(const p of parts){ p.t+=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=300*dt; }
+    parts=parts.filter(p=>p.t<p.life);
+    if(state==='menu' && Math.random()<dt*0.7){ // idle fish leaps behind the menu
+      const x=rand(W*0.45,W*0.95); fishes.push({x, y:waterY+6, vx:-rand(60,110)*S, vy:-rand(560,760)*S, golden:Math.random()<0.15, rot:0, wag:rand(0,TAU), dead:false});
+    }
+    const G=1500*S;
+    for(const f of fishes){ f.x+=f.vx*dt; f.y+=f.vy*dt; f.vy+=G*dt; f.wag+=dt*14; f.rot=Math.atan2(f.vy,f.vx);
+      if(f.y>waterY+14&&f.vy>0) f.dead=true; }
+    fishes=fishes.filter(f=>!f.dead);
+  }
+  render(t);
+}
+resize();
+reset(); caught=0;
+pel.y=H*0.42; pel.targetY=pel.y;
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
