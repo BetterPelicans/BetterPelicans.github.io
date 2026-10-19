@@ -145,7 +145,7 @@ function resize(){
   canvas.width=Math.round(W*DPR); canvas.height=Math.round(H*DPR);
   ctx.setTransform(DPR,0,0,DPR,0,0);
   S=Math.max(.8,Math.min(1.25,W/390)); PPM=9*S;
-  player.y=H*0.36;
+  player.y=H*0.30;   // skier rides near the top; the mountain runs DOWN the screen
   player.x=clamp(player.x||W/2, 24, W-24);
 }
 window.addEventListener('resize', resize);
@@ -386,7 +386,7 @@ function update(dt){
   const py=player.y;
   for(const e of entities){
     if(e.kind==='skier'){ e.x+=e.vx*dt; if(e.x<16||e.x>W-16) e.vx*=-1; e.wy += e.ownSpeed*dt; } // slower skiers get caught up
-    const ey = py - (e.wy-dist)*PPM;
+    const ey = py + (e.wy-dist)*PPM;   // ahead of you is downhill (below)
     e.screenY=ey;
     if(e.kind==='gate' && !e.judged && e.wy<=dist){
       e.judged=true;
@@ -416,7 +416,7 @@ function update(dt){
       }
     }
   }
-  entities=entities.filter(e=> e.screenY < H+70 && !(e.kind==='gate'&&e.judged&&e.wy<dist-4));
+  entities=entities.filter(e=> e.screenY > -90);   // drop what's passed above the top of the screen
 
   /* ---- the yeti ---- */
   if(!yeti.active && dist>=yeti.nextAt){
@@ -646,12 +646,12 @@ function frame(now){
   else {
     elapsed+=dt;
     for(const s of snow){ s.y+=(s.v+40)*dt/H; if(s.y>1){ s.y=-0.02; s.x=Math.random(); } }
-    player.x=W/2+Math.sin(t*0.7)*24; player.lean=Math.cos(t*0.7)*0.4; player.y=H*0.36;
+    player.x=W/2+Math.sin(t*0.7)*24; player.lean=Math.cos(t*0.7)*0.4; player.y=H*0.30;
   }
   render(t);
 }
 resize();
-player.x=W/2; player.targetX=W/2; player.y=H*0.36;
+player.x=W/2; player.targetX=W/2; player.y=H*0.30;
 requestAnimationFrame(frame);
 </script>
 </body>
