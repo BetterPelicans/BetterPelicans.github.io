@@ -346,6 +346,27 @@ function updateHUD(){
   if(yeti.active) yetiEl.textContent='👹 '+Math.max(0,Math.round(yeti.gap))+' m';
 }
 
+/* ---------------- sprites (generated art, vector fallback) ---------------- */
+const SPR={};
+function loadSprite(name, file){
+  const im=new Image();
+  im.onload=()=>{ SPR[name]=im; };
+  im.onerror=()=>{ SPR[name]=null; };
+  im.src='assets/'+file;
+}
+['skier-neutral','skier-carve','skier-tuck','skier-air','npc-neutral','npc-carve',
+ 'tree-pine','tree-bare','tree-big','rock','stump'].forEach(n=>loadSprite(n, n+'.webp'));
+const YETI_FRAMES=[];
+for(let i=0;i<8;i++){ const im=new Image(); im.onload=()=>{ YETI_FRAMES[i]=im; }; im.onerror=()=>{ YETI_FRAMES[i]=null; }; im.src='assets/yeti-'+i+'.webp'; }
+function drawSprite(im, cx, bottomY, h, flip=false, rot=0, alpha=1){
+  if(!im) return false;
+  const w=h*im.width/im.height;
+  ctx.save(); ctx.translate(cx, bottomY-h/2); if(rot) ctx.rotate(rot); if(flip) ctx.scale(-1,1);
+  ctx.globalAlpha=alpha;
+  ctx.drawImage(im, -w/2, -h/2, w, h);
+  ctx.restore(); return true;
+}
+
 /* ---------------- particles / text ---------------- */
 function spray(x,y,n,power=1,white='255,255,255'){
   for(let i=0;i<n;i++) parts.push({x:x+(Math.random()-0.5)*14, y:y+6, vx:(Math.random()-0.5)*90*power, vy:-Math.random()*70*power-10,
@@ -690,6 +711,9 @@ function drawGateE(e){
 }
 function drawSkierNPC(e,t){
   const x=e.x, y=e.screenY, s=S;
+  const carving=Math.abs(e.vx)>4;
+  const spr = carving? SPR['npc-carve'] : SPR['npc-neutral'];
+  if(spr && drawSprite(spr, x, y+13*s, 98*s, e.vx>4, clamp(e.vx/900,-0.2,0.2))) return;
   ctx.save(); ctx.translate(x,y);
   ctx.fillStyle='rgba(90,110,130,.25)'; ctx.beginPath(); ctx.ellipse(0,10*s,10*s,3*s,0,0,TAU); ctx.fill();
   ctx.strokeStyle='#0f172a'; ctx.lineWidth=2.6*s; ctx.lineCap='round';
@@ -704,8 +728,15 @@ function drawSkierNPC(e,t){
 function drawYeti(t){
   if(!yeti.active) return;
   const y = player.y - yeti.gap*PPM;
-  if(y<-120) return;
-  const s=S*1.5, bob=Math.abs(Math.sin(elapsed*10))*7*s, x=player.x+Math.sin(elapsed*2.2)*10;
+  if(y<-160) return;
+  const x=player.x+Math.sin(elapsed*2.2)*10;
+  const frame=YETI_FRAMES[Math.floor(elapsed*10)%8];
+  if(frame){
+    ctx.fillStyle='rgba(90,110,130,.3)'; ctx.beginPath(); ctx.ellipse(x, y+34*S, 30*S, 7*S, 0, 0, TAU); ctx.fill();
+    drawSprite(frame, x, y+36*S, 196*S);
+    return;
+  }
+  const s=S*1.5, bob=Math.abs(Math.sin(elapsed*10))*7*s;
   ctx.save(); ctx.translate(x, y+bob*0.3);
   ctx.fillStyle='rgba(90,110,130,.3)'; ctx.beginPath(); ctx.ellipse(0,26*s,24*s,6*s,0,0,TAU); ctx.fill();
   // legs mid-run
@@ -737,6 +768,18 @@ function drawPlayer(t){
   ctx.save();
   // shadow stays on the snow
   ctx.fillStyle='rgba(90,110,130,.35)'; ctx.beginPath(); ctx.ellipse(player.x, player.y+11*s, 13*s*(1-lifting/160), 4*s, 0, 0, TAU); ctx.fill();
+  // --- sprite body (generated art) when loaded ---
+  {
+    let spr=null, flip=false, rot=player.air>0? player.rot : player.lean*0.3;
+    const tucking = player.air<=0 && (joy.y>0.3 || (Math.abs(player.lean)<0.16 && speed>23));
+    if(player.downT>0){ spr=SPR['skier-carve']; rot=1.45; }
+    else if(player.air>0) spr=SPR['skier-air'];
+    else if(tucking) spr=SPR['skier-tuck'];
+    else if(Math.abs(player.lean)>0.26){ spr=SPR['skier-carve']; flip=player.lean>0; }
+    else spr=SPR['skier-neutral'];
+    const blink = player.invuln>0 && player.downT<=0 && Math.floor(t*14)%2===0;
+    if(spr && drawSprite(spr, x, y+19*s, 104*s, flip, rot, blink?0.35:1)){ ctx.restore(); return; }
+  }
   ctx.translate(x,y); ctx.rotate(player.air>0? player.rot : player.lean*0.45);
   if(player.invuln>0 && player.downT<=0 && Math.floor(t*14)%2===0) ctx.globalAlpha=.4;
   if(player.downT>0){ ctx.rotate(1.35); ctx.globalAlpha=.92; }
@@ -778,10 +821,14 @@ function render(t){
   // entities sorted by screen y (far first)
   const vis=entities.filter(e=>e.screenY>-80&&e.screenY<H+80).sort((a,b)=>a.screenY-b.screenY);
   for(const e of vis){
-    if(e.kind==='tree') drawTree(e.x,e.screenY,S*(e.ts||1), e.treeType||0);
+    if(e.kind==='tree'){
+      const sprName = e.treeType===1? 'tree-bare' : e.treeType===2? 'tree-big' : 'tree-pine';
+      const th = (e.treeType===2? 148 : 118)*S*(e.ts||1);
+      if(!(SPR[sprName] && drawSprite(SPR[sprName], e.x, e.screenY+8*S, th))) drawTree(e.x,e.screenY,S*(e.ts||1), e.treeType||0);
+    }
     else if(e.kind==='sign') drawSign(e);
-    else if(e.kind==='rock') drawRock(e.x,e.screenY,S);
-    else if(e.kind==='stump') drawStump(e.x,e.screenY,S);
+    else if(e.kind==='rock'){ if(!(SPR['rock'] && drawSprite(SPR['rock'], e.x, e.screenY+7*S, 54*S))) drawRock(e.x,e.screenY,S); }
+    else if(e.kind==='stump'){ if(!(SPR['stump'] && drawSprite(SPR['stump'], e.x, e.screenY+6*S, 46*S))) drawStump(e.x,e.screenY,S); }
     else if(e.kind==='pole') drawPole(e.x,e.screenY,S);
     else if(e.kind==='ramp') drawRamp(e.x,e.screenY,S);
     else if(e.kind==='gate') drawGateE(e);
