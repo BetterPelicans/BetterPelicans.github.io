@@ -353,12 +353,12 @@ function loadSprite(name, file){
   const im=new Image();
   im.onload=()=>{ SPR[name]=im; };
   im.onerror=()=>{ SPR[name]=null; };
-  im.src='assets/'+file;
+  im.src='assets/v4/'+file; // versioned path: busts phone/edge caches on art updates
 }
 ['skier-neutral','skier-carve','skier-tuck','skier-air','npc-neutral','npc-carve',
  'tree-pine','tree-bare','tree-big','rock','stump'].forEach(n=>loadSprite(n, n+'.webp'));
 const YETI_FRAMES=[];
-for(let i=0;i<8;i++){ const im=new Image(); im.onload=()=>{ YETI_FRAMES[i]=im; }; im.onerror=()=>{ YETI_FRAMES[i]=null; }; im.src='assets/yeti-'+i+'.webp'; }
+for(let i=0;i<8;i++){ const im=new Image(); im.onload=()=>{ YETI_FRAMES[i]=im; }; im.onerror=()=>{ YETI_FRAMES[i]=null; }; im.src='assets/v4/yeti-'+i+'.webp'; }
 function drawSprite(im, cx, bottomY, h, flip=false, rot=0, alpha=1){
   if(!im) return false;
   const w=h*im.width/im.height;
