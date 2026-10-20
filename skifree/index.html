@@ -227,7 +227,7 @@ function reset(m){
   entities=[]; parts=[]; texts=[]; trails=[]; yetiPrints=[]; birds=[]; lastTrailDist=0; lastPrintDist=0; birdTimer=9;
   nextChunk=70; nextGate=(m==='gates'?110:1e9); nextSign=500; zoneIdx=-1; shake=0;
   player.x=W/2; player.targetX=W/2; player.vx=0; player.lean=0; player.air=0; player.rot=0; player.downT=0; player.invuln=0;
-  yeti.active=false; yeti.gap=55; yeti.nextAt=2000; yeti.bonus=0; yeti.escaped=0;
+  yeti.active=false; yeti.gap=40; yeti.nextAt=2000; yeti.bonus=0; yeti.escaped=0;
   updateHUD();
 }
 /* ---------------- spawning (seeded, chunk by chunk) ---------------- */
@@ -353,12 +353,12 @@ function loadSprite(name, file){
   const im=new Image();
   im.onload=()=>{ SPR[name]=im; };
   im.onerror=()=>{ SPR[name]=null; };
-  im.src='assets/v4/'+file; // versioned path: busts phone/edge caches on art updates
+  im.src='assets/v5/'+file; // versioned path: busts phone/edge caches on art updates
 }
 ['skier-neutral','skier-carve','skier-tuck','skier-air','npc-neutral','npc-carve',
  'tree-pine','tree-bare','tree-big','rock','stump'].forEach(n=>loadSprite(n, n+'.webp'));
 const YETI_FRAMES=[];
-for(let i=0;i<8;i++){ const im=new Image(); im.onload=()=>{ YETI_FRAMES[i]=im; }; im.onerror=()=>{ YETI_FRAMES[i]=null; }; im.src='assets/v4/yeti-'+i+'.webp'; }
+for(let i=0;i<8;i++){ const im=new Image(); im.onload=()=>{ YETI_FRAMES[i]=im; }; im.onerror=()=>{ YETI_FRAMES[i]=null; }; im.src='assets/v5/yeti-'+i+'.webp'; }
 function drawSprite(im, cx, bottomY, h, flip=false, rot=0, alpha=1){
   if(!im) return false;
   const w=h*im.width/im.height;
@@ -500,12 +500,12 @@ function update(dt){
 
   /* ---- the yeti ---- */
   if(!yeti.active && dist>=yeti.nextAt){
-    yeti.active=true; yeti.gap=55;
+    yeti.active=true; yeti.gap=40;
     sfx.roar(); buzz([80,40,120]); shake=10;
     banner('SOMETHING IS BEHIND YOU', 'Trees and jumps slow him down. Do not fall.', 2600);
   }
   if(yeti.active){
-    let chase = Math.max(speed*0.88 + 1.6, 18.5) + yeti.bonus;
+    let chase = Math.max(speed*0.94 + 2.2, 20) + yeti.bonus;   // closes slowly at cruise; trees (x0.86) and jumps (x0.80) still let you escape
     if(player.air>0) chase*=0.80;                            // he can't judge a jump
     if(zone.id==='forest') chase*=0.86;                      // trees tangle him up
     if(player.downT>0) chase = speed+7;                      // blood in the snow
@@ -561,23 +561,12 @@ function ridge(baseY, amp, seg, par, colFill){
   ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.fill();
 }
 function bg(){
-  const dusk=clamp(dist/2600, 0, 1);                    // the light dies as you descend
-  const top=lerpC([168,198,224],[86,84,128],dusk), mid=lerpC([219,234,254],[238,164,120],dusk), low=lerpC([248,250,252],[250,214,170],dusk);
+  // a plain white ski field: subtle vertical shading only — no sky, sun or ridges on the slope
   const g=ctx.createLinearGradient(0,0,0,H);
-  g.addColorStop(0,rgba(top,1)); g.addColorStop(.35,rgba(mid,1)); g.addColorStop(1,rgba(low,1));
+  g.addColorStop(0,'#ffffff'); g.addColorStop(1,'#eef3f9');
   ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
-  // low sun, sinking with the dusk
-  const sunX=W*0.78, sunY=H*(0.06+dusk*0.09), sunR=26*S;
-  const rg=ctx.createRadialGradient(sunX,sunY,2,sunX,sunY,sunR*4.4);
-  rg.addColorStop(0,'rgba(255,238,180,.9)'); rg.addColorStop(.3,'rgba(255,205,120,.35)'); rg.addColorStop(1,'rgba(255,205,120,0)');
-  ctx.fillStyle=rg; ctx.beginPath(); ctx.arc(sunX,sunY,sunR*4.4,0,TAU); ctx.fill();
-  ctx.fillStyle=rgba(lerpC([255,240,190],[255,178,102],dusk),.95); ctx.beginPath(); ctx.arc(sunX,sunY,sunR,0,TAU); ctx.fill();
-  // three parallax ridges
-  ridge(H*0.20, H*0.10, 150, 0.02, rgba(lerpC([148,175,205],[110,100,140],dusk),.45));
-  ridge(H*0.26, H*0.12, 115, 0.05, rgba(lerpC([110,145,180],[86,80,118],dusk),.6));
-  ridge(H*0.34, H*0.10, 88, 0.11, rgba(lerpC([80,115,155],[64,62,96],dusk),.8));
-  // cloud shadows drifting over everything
-  ctx.fillStyle='rgba(40,60,90,.07)';
+  // faint cloud shadows drifting over the snow
+  ctx.fillStyle='rgba(40,60,90,.05)';
   for(let i=0;i<2;i++){
     const cx=((i*470+elapsed*14*(i?1.4:1))%(W+340))-170, cy=((i*300+dist*PPM*0.9)%(H+240))-120;
     ctx.beginPath(); ctx.ellipse(cx,cy,150*S,44*S,-0.2,0,TAU); ctx.fill();
