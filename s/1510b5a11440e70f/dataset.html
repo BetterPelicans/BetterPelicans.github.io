@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dataset — Better Pelicans</title>
+  <meta name="description" content="pilot-0003: four approved pelican-on-bicycle items, eight standalone SVGs, source rasters, previews, metadata and a machine-readable JSONL index. CC0.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav aria-label="Main">
+      <a class="brand" href="index.html">Better Pelicans</a>
+      <ul>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="dataset.html" aria-current="page">Dataset</a></li>
+        <li><a href="how-they-are-made.html">How They Are Made</a></li>
+        <li><a href="download.html">Download</a></li>
+        <li><a href="contribute.html">Contribute</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main id="main">
+    <h1>Dataset</h1>
+    <p class="lead">The collection is the product. Every pelican ships with its
+    source raster, two standalone SVGs, rendered previews, prompts, captions,
+    hashes, and exact conversion settings.</p>
+
+    <section class="dataset-card" aria-label="Dataset card">
+      <dl class="status-list">
+        <dt>Name</dt><dd>Better Pelicans — pilot-0003</dd>
+        <dt>Release</dt><dd>pilot-0003 (pilot; bulk release held until the collection clears the bar)</dd>
+        <dt>License</dt><dd>CC0-1.0 (public domain dedication)</dd>
+        <dt>Items</dt><dd>4 approved pelicans · 8 SVGs · 4 source rasters · 8 previews · 4 metadata records · 1 JSONL index</dd>
+        <dt>Formats</dt><dd>SVG (standalone, no rasters, no scripts) · PNG previews · JSON metadata · JSONL index</dd>
+        <dt>Size</dt><dd>≈ 6,504 KB of SVGs, ≈ 16 MB with rasters and previews</dd>
+        <dt>Provenance</dt><dd>Sources: gpt-image-2-medium via OpenAI/Codex · traces: VTracer 0.6.12 · validation: resvg + librsvg · human review: approved (owner, 2026-08-02)</dd>
+        <dt>Hashes</dt><dd>SHA-256 for every source and SVG, in the metadata and the index</dd>
+        <dt>Index</dt><dd><a href="assets/dataset/index.jsonl">index.jsonl</a> — machine-readable, paths relative to the dataset folder</dd>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Items</h2>
+      <div class="table-wrap">
+      <table class="stats">
+        <thead>
+          <tr><th>ID</th><th>Style</th><th>Master paths</th><th>Teaching paths</th><th>Master size</th><th>Teaching size</th><th>Review</th></tr>
+        </thead>
+        <tbody>
+      <tr>
+        <td><a href="gallery.html#bp-000001">BP-000001</a></td>
+        <td>Flat editorial, side profile</td>
+        <td class="num">1,964</td>
+        <td class="num">235</td>
+        <td class="num">360 KB</td>
+        <td class="num">41 KB</td>
+        <td>approved</td>
+      </tr>
+      <tr>
+        <td><a href="gallery.html#bp-000002">BP-000002</a></td>
+        <td>Flat editorial, three-quarter</td>
+        <td class="num">3,282</td>
+        <td class="num">174</td>
+        <td class="num">583 KB</td>
+        <td class="num">33 KB</td>
+        <td>approved</td>
+      </tr>
+      <tr>
+        <td><a href="gallery.html#bp-000003">BP-000003</a></td>
+        <td>Photoreal showcase</td>
+        <td class="num">27,317</td>
+        <td class="num">708</td>
+        <td class="num">4,784 KB</td>
+        <td class="num">302 KB</td>
+        <td>approved</td>
+      </tr>
+      <tr>
+        <td><a href="gallery.html#bp-000005">BP-000005</a></td>
+        <td>Graphic poster</td>
+        <td class="num">3,270</td>
+        <td class="num">28</td>
+        <td class="num">388 KB</td>
+        <td class="num">13 KB</td>
+        <td>approved</td>
+      </tr>
+      </tbody>
+      </table>
+      </div>
+      <p class="updated">Full per-item metadata: <a href="assets/dataset/BP-000001.json">BP-000001.json</a> ·
+      <a href="assets/dataset/BP-000002.json">BP-000002.json</a> ·
+      <a href="assets/dataset/BP-000003.json">BP-000003.json</a> ·
+      <a href="assets/dataset/BP-000005.json">BP-000005.json</a>.
+      One pilot candidate (BP-000004) failed human review twice and is retired;
+      it is not part of the dataset.</p>
+    </section>
+
+    <section>
+      <h2>Standards</h2>
+      <ul>
+        <li>Every SVG is standalone: no embedded rasters, no scripts, no external requests, no fonts.</li>
+        <li>Every SVG renders identically in resvg and librsvg before it ships.</li>
+        <li>Every file is hashed and every hash is published — if the file changes, you can prove it.</li>
+        <li>We make no promises about what any model will do with the dataset. It is openly licensed; the rest is up to the world.</li>
+      </ul>
+      <p>Licensing details: <a href="../../docs/licensing.md">docs/licensing.md</a> ·
+      provenance policy: <a href="../../docs/provenance.md">docs/provenance.md</a>.</p>
+    </section>
+  </main>
+  <footer>
+    <p>Better Pelicans · code MIT · assets <a href="../../docs/licensing.md">CC0</a> · <a href="../../docs/provenance.md">provenance &amp; disclosure</a></p>
+    <p>No actual pelicans were harmed. Several SVGs did not make it.</p>
+  </footer></body>
+</html>

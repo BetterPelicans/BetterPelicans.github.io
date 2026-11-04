@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How They Are Made — Better Pelicans</title>
+  <meta name="description" content="The pipeline behind every approved pelican: generate, screen, preprocess, vectorize, render, compare, review, publish. Raster-first, deterministically validated, human-reviewed.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav aria-label="Main">
+      <a class="brand" href="index.html">Better Pelicans</a>
+      <ul>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="dataset.html">Dataset</a></li>
+        <li><a href="how-they-are-made.html" aria-current="page">How They Are Made</a></li>
+        <li><a href="download.html">Download</a></li>
+        <li><a href="contribute.html">Contribute</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <h1>How They Are Made</h1>
+    <p class="lead">No language model writes these SVGs. The pipeline is
+    raster-first: make a great picture, turn it into honest vectors with real
+    tools, and check the result twice. Also, a human watches.</p>
+
+    <section>
+      <h2>1. Generate</h2>
+      <p>We ask an image model for a pelican riding a bicycle, in compositions
+      built to vectorize: crisp edges, no text, no watermarks, a mechanically
+      coherent bike, an unmistakable pouch. Budget discipline applies — roughly
+      two generations per accepted pelican — and new sources come out square,
+      1:1, like a proper print.</p>
+    </section>
+
+    <section>
+      <h2>2. Screen</h2>
+      <p>Every candidate is screened by vision before it earns a trace:
+      anatomy, bicycle mechanics, bird–bicycle interaction, composition.
+      Studio-style photoreal keeps failing review; environmental photoreal,
+      flat editorial, and poster styles pass. The pipeline has opinions now.</p>
+    </section>
+
+    <section>
+      <h2>3. Preprocess</h2>
+      <p>ImageMagick resizes and quantizes. rembg removes backgrounds when a
+      clean edge is worth the effort. Whatever the source needs to trace
+      cleanly, it gets.</p>
+    </section>
+
+    <section>
+      <h2>4. Vectorize</h2>
+      <p>VTracer sweeps parameters — palette sizes, color precision, path
+      precision, filtering — and we keep the best candidates. Each approved
+      image produces two editions: the <strong>Visual Master</strong>
+      (maximum fidelity, all the shading, up to tens of thousands of paths)
+      and the <strong>Teaching Vector</strong> (fewer colors, fewer paths,
+      tidy order-preserving groups, built to be useful).</p>
+    </section>
+
+    <section>
+      <h2>5. Render &amp; compare</h2>
+      <p>Every SVG renders twice — resvg and librsvg — because a pelican that
+      renders in one tool is a rumor, not a fact. Fidelity against the source
+      is scored deterministically, with no vibes allowed.</p>
+    </section>
+
+    <section>
+      <h2>6. Review</h2>
+      <p>A human looks at each pair and votes pass or fail. Failures get
+      reworked once — we believe in second chances, not fourth ones — and a
+      second failure retires the item with full honors. One pilot candidate
+      is already retired.</p>
+    </section>
+
+    <section>
+      <h2>7. Publish</h2>
+      <p>Approved items ship into the <a href="dataset.html">dataset</a> with
+      prompts, captions, hashes, settings, and provenance. Everything is CC0.
+      Nothing is hidden.</p>
+    </section>
+
+    <section>
+      <h2>8. The standards</h2>
+      <ul>
+        <li>Standalone SVG only: no embedded rasters, no scripts, no external requests, no fonts.</li>
+        <li>Identical renders in resvg and librsvg before anything ships.</li>
+        <li>Every file hashed; if a file changes, the published hash catches it.</li>
+      </ul>
+      <p>Benchmark background and contamination caveats:
+      <a href="../../docs/benchmark.md">docs/benchmark.md</a> · Licensing:
+      <a href="../../docs/licensing.md">docs/licensing.md</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Better Pelicans · code MIT · assets <a href="../../docs/licensing.md">CC0</a> · <a href="../../docs/provenance.md">provenance &amp; disclosure</a></p>
+    <p>No actual pelicans were harmed. Several SVGs did not make it.</p>
+  </footer>
+</body>
+</html>
