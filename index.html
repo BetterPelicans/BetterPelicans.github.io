@@ -53,10 +53,8 @@
 
     <h1>Five flips</h1>
     <p>What is the <strong>smallest number of squares you can flip</strong>
-    &mdash; black to white or white to black &mdash; to make a scanner read a
-    Version&nbsp;1 QR code as something else entirely? A QR code&rsquo;s error
-    correction is there to shrug off damage; this is that slack, spent
-    deliberately instead.</p>
+    &mdash; black to white and/or white to black &mdash; to make a scanner read a
+    Version&nbsp;1 QR code as something else entirely?</p>
     <p>The answer is <strong>five</strong>. Flip five squares in a code for
     <code>https://x.com</code> and scanners read it as <code>https://8.com</code>.
     Try it with your phone:</p>
@@ -71,11 +69,12 @@
       <figcaption id="demo-cap">Scans as <code>https://x.com</code></figcaption>
     </figure>
 
-    <p>Nothing is reprinted or replaced: this is the original QR code, altered in
-    as few squares as possible. The altered pattern usually isn&rsquo;t a valid code
-    at all &mdash; it just lands close enough to a <em>different</em> valid code that
-    the scanner&rsquo;s error correction finishes the job and reads out that
-    code&rsquo;s content instead.</p>
+    <p>This is the original QR code, altered in as few squares as possible.
+    The altered pattern usually isn&rsquo;t a valid code at all &mdash; its squares
+    don&rsquo;t satisfy the code&rsquo;s own rules, so no encoder would ever print
+    it. It works because it lands close enough to a <em>different</em> valid code:
+    the scanner treats the mismatches as damage, corrects them, and reads out
+    that other code&rsquo;s content instead.</p>
 
     <p>We computed the exact minimum for all four error-correction levels of
     Version&nbsp;1 &mdash; not by sampling, but by exhaustive enumeration of every
