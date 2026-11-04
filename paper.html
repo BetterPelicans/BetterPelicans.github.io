@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>On the Minimum Number of Module Inversions Required to Redirect the Decoding of a Version 1 QR Code — Better Pelicans</title>
+  <meta name="description" content="The exact minimum number of module inversions required to redirect the decoding of a Version 1 QR code: L = 5, M = 6, Q = 8, H = 12. Better Pelicans, November 2026.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b6e5c'/%3E%3Ccircle cx='32' cy='24' r='9' fill='%23faf9f6'/%3E%3Cpath d='M23 26 q-8 -2 -9 -9 q8 3 9 9z' fill='%23e8a13c'/%3E%3Cpath d='M32 33 L24 46 L20 44 L27 33z' fill='%23faf9f6'/%3E%3Ccircle cx='47' cy='46' r='7' fill='none' stroke='%23faf9f6' stroke-width='3'/%3E%3Ccircle cx='21' cy='46' r='7' fill='none' stroke='%23faf9f6' stroke-width='3'/%3E%3Cpath d='M28 46 L40 46' stroke='%23faf9f6' stroke-width='3'/%3E%3Cpath d='M34 46 L38 33 L33 30' fill='none' stroke='%23faf9f6' stroke-width='3'/%3E%3C/svg%3E">
+  <style>
+    :root { --bg: #faf9f6; --fg: #1c1b18; --muted: #5c5a54; --accent: #0b6e5c; --border: #d9d6cf; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+           line-height: 1.65; color: var(--fg); background: var(--bg); }
+    main { max-width: 44rem; margin: 0 auto; padding: 3rem 1.5rem 2rem; }
+    .topbar { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+              font-size: 0.9rem; margin-bottom: 2.5rem; }
+    a { color: var(--accent); }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .kicker { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+              color: var(--accent); border: 1px solid var(--accent); border-radius: 999px;
+              padding: 0.15rem 0.7rem; display: inline-block; margin-bottom: 1rem; }
+    h1 { font-size: 1.9rem; line-height: 1.25; margin: 0.5rem 0 0.75rem; }
+    h2 { font-size: 1.3rem; margin: 2.5rem 0 0.75rem; }
+    .byline { color: var(--muted); margin: 0.25rem 0; }
+    .note { color: var(--muted); font-style: italic; }
+    .abstract { border: 1px solid var(--border); border-radius: 0.75rem; padding: 1rem 1.25rem; background: #fff; margin: 1.5rem 0; }
+    .abstract h2 { margin-top: 0; font-size: 1.05rem; }
+    .theorem { border: 1px solid var(--accent); border-radius: 0.75rem; padding: 1rem 1.25rem; background: #eaf4f0; margin: 1.5rem 0; }
+    .formula { text-align: center; font-size: 1.1rem; margin: 1.25rem 0; }
+    table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.95rem; }
+    th, td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+    th { background: #eaf4f0; }
+    td.num, th.num { text-align: right; }
+    figure { margin: 1.5rem 0; text-align: center; }
+    figure .pair { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    figure img { width: min(280px, 42vw); height: auto; image-rendering: pixelated;
+                 border: 1px solid var(--border); border-radius: 0.5rem; background: #fff; }
+    figcaption { color: var(--muted); font-size: 0.92rem; margin-top: 0.75rem; text-align: left; }
+    .coords { display: flex; gap: 2rem; flex-wrap: wrap; font-size: 0.95rem; }
+    .coords ul { margin: 0.25rem 0; padding-left: 1.2rem; }
+    dl dt { font-weight: 700; margin-top: 0.9rem; }
+    dl dd { margin: 0.15rem 0 0 0; color: var(--muted); }
+    ol.refs li { margin-bottom: 0.6rem; }
+    footer { border-top: 1px solid var(--border); padding: 1.25rem 1rem; text-align: center;
+             color: var(--muted); font-size: 0.9rem; margin-top: 3rem; }
+    @page { size: A4; margin: 2.2cm 2cm; }
+    @media print {
+      body { background: #fff; }
+      main { max-width: none; padding: 0; }
+      .topbar { display: none; }
+      .abstract, .theorem { break-inside: avoid; }
+      table, figure { break-inside: avoid; }
+      a { color: var(--fg); text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="topbar">
+      <a href="index.html">&larr; Better Pelicans</a>
+      <a href="paper.pdf">Download as PDF</a>
+    </div>
+
+    <h1>On the Minimum Number of Module Inversions Required to Redirect the Decoding of a Version 1 QR Code</h1>
+    <p class="byline"><strong>Better Pelicans</strong></p>
+    <p class="byline">November 2026</p>
+    <p class="byline"><a href="mailto:hello@betterpelicans.com">hello@betterpelicans.com</a></p>
+
+    <section class="abstract">
+      <h2>Abstract</h2>
+      <p>We determine, exactly, the minimum number of individual modules (printed squares) of a Version 1, error-correction level L QR code that must be inverted so that a bounded-distance decoder reports a valid payload different from the one encoded: the minimum is 5. The lower bound is a single subtraction &mdash; the code&rsquo;s minimum symbol distance d&nbsp;=&nbsp;8 minus its correction radius t&nbsp;=&nbsp;3 &mdash; and exhaustive enumeration of the minimum-weight difference codewords of the underlying RS(26,&nbsp;19) code (1,562,275 supports &times; 255 scalings) finds exactly 595 that attain it. The minimum is not merely a gibberish-producing curiosity: a code encoding https://x.com, altered in exactly five modules, is decoded by the production library ZXing-C++ as https://8.com. The same method completes Version 1 at the remaining levels: the exact minima are 6 for M and 8 for Q, both attaining the floor d&nbsp;&minus;&nbsp;t, and 12 for H, whose floor is 10 &mdash; the floor is a lower bound, and at this level it is not attainable.</p>
+      <p><strong>Keywords:</strong> QR codes; Reed&ndash;Solomon codes; minimum distance; bounded-distance decoding; binary weight; exhaustive enumeration.</p>
+    </section>
+
+    <h2>1. Introduction</h2>
+    <p>A QR code is usually discussed in units of codewords: eight-module bytes protected by a Reed&ndash;Solomon code. The person inverting the colours, however, acts in units of modules: single black or white squares. This paper asks a question that sits between those two units, and that, to the author&rsquo;s knowledge, has not previously been answered exactly for any QR version or error-correction level: how few printed squares must be changed so that a decoder reads the code as something else?</p>
+    <p>We study the decoder-effective problem. The altered pattern need not itself be a valid encoding of anything; it need only lie within the correction radius of a different valid code, so that the decoder&rsquo;s own error correction completes the transformation and returns that code&rsquo;s payload. A bounded-distance decoder is a decoder that returns the unique codeword within the guaranteed correction radius when one exists, and otherwise reports failure; this is what we mean throughout by a standards-compliant scanner. A real decoder does not ask whether the received pattern is valid &mdash; it asks which valid code is nearest &mdash; so there is no need to construct a valid code at all: only to reach the boundary of another code&rsquo;s correction region, and let the decoder perform the remaining work.</p>
+    <p><strong>Related work.</strong> The attacker who edits a printed code with a pen was introduced by Kieseberg et al. [4], whose 2012 follow-up [5] demonstrates &mdash; per instance, one-directionally (white modules blackened), and with no claim of minimality &mdash; that blackening 20 modules changes a code for http://yahoo.at into one decoding as http://yghqo.at. The closest prior work is Bajaj [6], who asks for the QR code closest to a given one and, from brute-force tests on near-full-length payloads, conjectures Version 1 minima of 7, 9, 14 and 20 for levels L, M, Q and H respectively (his Table 6), with no proof of minimality and no count of the optimal difference codewords; his targets are other canonical encodings. The results here differ in kind: they are exact &mdash; a lower bound met by exhaustive enumeration &mdash; they include the counts of optimal difference codewords, and they cover short payloads, where pad codewords that decoders ignore lower the cost; that mechanism accounts for the gap at level L, where the conjectured 7 becomes an exact 5.</p>
+
+    <h2>2. The Version 1-L result</h2>
+    <p>We fix the smallest QR configuration. A Version 1 symbol is a 21&nbsp;&times;&nbsp;21 module matrix; at error-correction level L its data and check codewords form a single Reed&ndash;Solomon block RS(26,&nbsp;19) over GF(256): 19 data codewords and 7 check codewords. Each codeword is printed as exactly 8 modules, and a module inversion (or flip) is the toggling of one bit of one codeword. The code is maximum-distance separable, so its minimum symbol distance is d&nbsp;=&nbsp;26&nbsp;&minus;&nbsp;19&nbsp;+&nbsp;1&nbsp;=&nbsp;8, and a bounded-distance decoder corrects up to t&nbsp;=&nbsp;&lfloor;(d&nbsp;&minus;&nbsp;1)/2&rfloor;&nbsp;=&nbsp;3 erroneous symbols. Version, error-correction level and mask pattern are held fixed, and inversions are counted in the data area only.</p>
+    <div class="theorem">
+      <p><strong>Theorem 1.</strong> (Decoder-effective minimum for Version 1-L.) The minimum number of module inversions that transforms a Version 1-L QR code into a pattern decoded, by a bounded-distance decoder, as a different valid payload is exactly 5.</p>
+    </div>
+    <p><strong>Proof.</strong> <em>Lower bound.</em> Let A be the encoded codeword and B any other valid codeword. By the minimum distance of RS(26,&nbsp;19), A and B differ in at least d&nbsp;=&nbsp;8 symbol positions. A received pattern R is decoded as B only if R lies within the correction ball of radius t&nbsp;=&nbsp;3 about B, so by the triangle inequality on symbol distance, R differs from A in at least 8&nbsp;&minus;&nbsp;3&nbsp;=&nbsp;5 symbols: at least five symbols must be fully converted toward another codeword. Each differing symbol costs at least one module inversion, so any decoder-effective transformation costs at least 5 inversions; in particular, no pattern of 4 inversions can be decoded as anything other than A. <em>Sharpness.</em> It remains to exhibit a transformation of cost exactly 5. Take a difference codeword &Delta; of minimum symbol weight 8 that contains at least five one-bit symbols among its eight nonzero symbols. Do not add the whole of &Delta; &mdash; its total binary weight is at least 8. Flip only five of its one-bit symbols and leave the other three nonzero symbols unflipped: the resulting pattern is exactly 5 module inversions from A and exactly 3 symbols from the neighbouring codeword A&nbsp;+&nbsp;&Delta;, hence inside that codeword&rsquo;s correction ball. The enumeration below shows that such &Delta; exist in number, and &sect;3 verifies one instance end to end against a production decoder. The lower bound is therefore attained, and the minimum is exactly 5. &#8718;</p>
+    <p class="formula">d(A, B) &ge; 8, &nbsp; t = 3 &nbsp; &Longrightarrow; &nbsp; inversions &ge; 8 &minus; 3 = 5</p>
+    <p><strong>Enumeration.</strong> Every weight-8 support of a minimum-weight difference codeword was generated: there are C(26,&nbsp;8)&nbsp;=&nbsp;1,562,275 such supports. On each support the codeword is determined up to a nonzero scalar multiple, giving 255 scalings per support and some 398&nbsp;million candidate codewords in total, each scored by the number of one-bit symbols it contains. The enumeration is exhaustive, not sampled. Exactly 595 difference codewords contain at least five one-bit symbols and so support a five-inversion construction: 580 with exactly five one-bit symbols and 15 with exactly six (for those, any five of the six may be chosen). The complete list is distributed with the paper as cost5_codewords.txt, so the count is independently checkable rather than merely reported.</p>
+
+    <h2>3. The main example: https://x.com &rarr; https://8.com</h2>
+    <p>Most five-inversion targets decode to garbled byte-mode text &mdash; different from the encoded payload, as the theorem requires, but not presentable. One is clean, and it is the example we feature. A code encoding https://x.com (Version 1-L, mask pattern 0), altered in exactly the five modules listed in Figure&nbsp;1, is decoded by ZXing-C++ as https://8.com; the verification was performed end to end on the rendered patterns shown there. The construction uses a single difference codeword, in hexadecimal 000000000000000000040000000000db01000100086500320080. Its one-bit symbols are at positions 9, 16, 18, 20 and 25 (0-indexed); flipping exactly those five &mdash; the difference&rsquo;s other three nonzero symbols, at positions 15, 21 and 23, being left unflipped &mdash; inverts the five modules of Figure&nbsp;1, and the altered pattern lies at symbol distance 5 from the base codeword and symbol distance 3 from the target, within the correction radius.</p>
+    <p>The instance turns on a slack in the encoding that a canonical-encoding analysis misses. The target codeword agrees with the canonical encoding of https://8.com on every payload symbol, and differs from that canonical encoding only in the pad codewords, together with the error-correction codewords that follow from them. A decoder stops reading at the payload terminator and never validates the pad codewords, so the set of codewords that decode to a given text is much larger than that text&rsquo;s single canonical encoding &mdash; and a member of that larger set can lie at decoder-effective distance 5 even when the canonical encoding does not.</p>
+    <p>8.com is a well-formed URL string, but the name cannot be registered or purchased: it is reserved by IANA, which in December 1993 reserved all single-character second-level domains under .com, .net and .org. Its interest here is as a clean, well-formed decoded string, not as a destination. Nor is the pair an isolated accident: sweeping 48,762 base payloads against all 595 difference codewords yields 28,394 clean URL&rarr;URL pairs, every one of them a single host character changed by XOR 0x40 &mdash; x&rarr;8 is one instance of a completely characterised family &mdash; and no clean phrase&rarr;phrase pair.</p>
+
+    <figure>
+      <div class="pair">
+        <img src="img/x-com.png" alt="Original QR code encoding https://x.com">
+        <img src="img/8-com.png" alt="The same code after five module inversions; decodes as https://8.com">
+      </div>
+      <figcaption><strong>Figure 1.</strong> The featured instance: the true rendered patterns. Left, the original code encoding https://x.com; right, the same code after exactly five module inversions. ZXing-C++ decodes them as https://x.com and https://8.com respectively.</figcaption>
+    </figure>
+    <div class="coords">
+      <div>
+        <strong>Inverted modules</strong> (coordinates (x,&nbsp;y) from the top-left, 0-indexed):
+        <ul>
+          <li>(13, 11)</li>
+          <li>(11, 0)</li>
+          <li>(9, 8)</li>
+          <li>(10, 15)</li>
+          <li>(1, 9)</li>
+        </ul>
+      </div>
+      <div>
+        <strong>One-bit symbols</strong> of the difference codeword, at symbol positions:
+        <ul>
+          <li>9</li>
+          <li>16</li>
+          <li>18</li>
+          <li>20</li>
+          <li>25</li>
+        </ul>
+      </div>
+      <div>
+        <strong>Encoded payload:</strong> https://x.com<br>
+        <strong>ZXing-C++ decode after 5 inversions:</strong> https://8.com
+      </div>
+    </div>
+
+    <h2>4. The remaining Version 1 levels</h2>
+    <p>The analysis generalises verbatim to the other error-correction levels of Version 1. Each level is still a single Reed&ndash;Solomon block of length 26 over GF(256); only the number of data codewords changes, and with it d and t. For a difference codeword &Delta;, the decoder-effective cost is its total binary weight minus the t largest symbol bit-weights &mdash; the t symbols the decoder corrects for free &mdash; so the universal lower bound, the sphere floor, is d&nbsp;&minus;&nbsp;t, attained exactly when a minimum-weight difference codeword carries at least d&nbsp;&minus;&nbsp;t one-bit symbols. We repeated the exhaustive enumeration of every minimum-weight support for levels M, Q and H with the same machinery; as a validation, the generalised enumerator reproduces the level-L count of 595 exactly. Table&nbsp;1 gives the complete Version 1 picture: L, M and Q attain their floors &mdash; M comfortably, Q with only seven optimal codewords in the whole code &mdash; while H does not. For H, cost 11 could also arise from a codeword of symbol weight 19, which would need at least 11 one-bit symbols; a second phase enumerated all 657,800 weight-19 supports and found none at cost 11 &mdash; though exactly two attain cost 12 &mdash; and a further exhaustive count of the weight-20 class found exactly one further codeword at cost 12, while any codeword of symbol weight 21 or more costs more than 12 by the symbol bound alone. H&rsquo;s exact minimum is therefore 12, two above its floor: the floor is a lower bound, and at this level it is not attainable, because attainment is a property of the binary weights of minimum-weight codewords, not of the symbol distance alone. The count of H&rsquo;s optimal codewords is accordingly exact: seven in total &mdash; four of minimum weight 18, two of weight 19 and one of weight 20.</p>
+
+    <table>
+      <caption style="text-align:left; padding-bottom:0.5rem;"><strong>Table 1.</strong> Exact decoder-effective minima for Version 1, all error-correction levels (bounded-distance decoder).</caption>
+      <thead>
+        <tr><th>Level</th><th>Code</th><th class="num">d</th><th class="num">t</th><th class="num">Floor d &minus; t</th><th class="num">Exact minimum</th><th class="num">Optimal difference codewords</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>L</td><td>RS(26, 19)</td><td class="num">8</td><td class="num">3</td><td class="num">5</td><td class="num">5</td><td class="num">595</td></tr>
+        <tr><td>M</td><td>RS(26, 16)</td><td class="num">11</td><td class="num">5</td><td class="num">6</td><td class="num">6</td><td class="num">705</td></tr>
+        <tr><td>Q</td><td>RS(26, 13)</td><td class="num">14</td><td class="num">6</td><td class="num">8</td><td class="num">8</td><td class="num">7</td></tr>
+        <tr><td>H</td><td>RS(26, 9)</td><td class="num">18</td><td class="num">8</td><td class="num">10</td><td class="num">12</td><td class="num">7 (4 of weight 18, 2 of weight 19, 1 of weight 20)</td></tr>
+      </tbody>
+    </table>
+
+    <h2>5. A remark on real decoders</h2>
+    <p>The minima of Table&nbsp;1 are exact for bounded-distance decoders. Whether a specific production decoder actually decodes an optimal pattern is an empirical question, and for the zxing-cpp build tested the answer has been pinned down exactly &mdash; and the constraint is not error correction, which corrects the full radius on every pattern the decoder accepts, and rejects most pad-slack targets even rendered error-free. ZXing&rsquo;s acceptance is exactly: a valid codeword, plus a strictly grammatical segment stream, plus non-empty decoded content. A pad-slack target is a valid Reed&ndash;Solomon codeword but a non-canonical bit stream &mdash; after the payload segment, the remaining bits are leftover data instead of the standard terminator and pad bytes &mdash; and ZXing parses the entire segment stream strictly, rejecting tails that read as reserved mode indicators or over-length segments; where the tail happens to read as a terminator immediately after the payload, as in the x.com &rarr; 8.com instance of &sect;3, the codeword decodes normally. Separately, ZXing suppresses empty results: it returns nothing for a codeword that decodes to no content. This two-rule model &mdash; strict segment-stream validation of non-canonical tails, plus empty-content suppression &mdash; predicts ZXing&rsquo;s verdict on all 712 codewords tested, with no exceptions; in particular, none of the seven optimal level-Q patterns is decoded by ZXing, although a reference bounded-distance decoder corrects all of them. Nor is any of this a departure from the standard: ISO/IEC 18004 fixes the symbology, the canonical encoding and an error-correction capability of t symbols, but does not oblige a decoder to accept every codeword that bounded-distance correction can reach, still less a non-canonical bit stream no conforming encoder would produce. The claims of this paper are therefore stated, precisely, for a bounded-distance decoder; a real scanner additionally subjects the corrected codeword to full segment-stream validation, which non-canonical targets can fail even with no channel errors at all.</p>
+
+    <h2>6. Discussion and limitations</h2>
+    <p>The results are proved for Version 1 at all four error-correction levels, with inversions counted in the data area only and version, level and mask pattern held fixed; the format-information strip is protected by its own BCH code and is a separate problem, outside the scope of the count. Three extensions are natural. Larger versions involve multiple interleaved Reed&ndash;Solomon blocks, and the level-H case is the cautionary one: their floors d&nbsp;&minus;&nbsp;t are lower bounds to be tested, not answers. A prescribed target &mdash; one specific destination chosen in advance &mdash; remains more expensive than landing somewhere presentable: measured canonical-to-canonical, the cheapest clean targets from a short URL base cost 9&ndash;10 inversions, and whether pad slack lowers prescribed-target costs in particular cases has not been exhaustively computed; the exact valid-to-valid problem, in which the altered pattern must itself encode the new payload perfectly, is likewise open (our best construction for Version 1-L costs 16 inversions). Finally, a practically suggestive variant restricts all inversions to the white-to-black direction; the enumeration can be re-scored under this restriction, and the variant is left as an open computation.</p>
+
+    <h2>Data and Code Availability</h2>
+    <p>All materials required to reproduce the enumeration and the worked example accompany this paper in its public repository: <a href="https://github.com/BetterPelicans/qr-five-flips">github.com/BetterPelicans/qr-five-flips</a>.</p>
+    <dl>
+      <dt>prove5b.c + H_matrix.h</dt>
+      <dd>The exhaustive C enumerator for level L &mdash; every weight-8 support &times; every nonzero scaling.</dd>
+      <dt>cost5_codewords.txt</dt>
+      <dd>All 595 difference codewords supporting a five-inversion construction.</dd>
+      <dt>verifyX.py</dt>
+      <dd>End-to-end verification of the featured https://x.com &rarr; https://8.com instance of &sect;3 &mdash; difference codeword, flip coordinates, and the ZXing-C++ decode of the rendered patterns.</dd>
+      <dt>sweep.py</dt>
+      <dd>The sweep of &sect;3 &mdash; 48,762 bases &times; all 595 difference codewords, yielding 28,394 clean URL&rarr;URL pairs, all by the XOR 0x40 single-character mechanism.</dd>
+      <dt>prove_v1.c + genH.py</dt>
+      <dd>The generalised enumerator of &sect;4 &mdash; every minimum-weight support for levels M, Q and H; reproduces the level-L count of 595 exactly as a validation.</dd>
+      <dt>phase2_H.c</dt>
+      <dd>The level-H phase-2 scan of &sect;4 &mdash; all 657,800 weight-19 supports, excluding a cost of 11 for Version 1-H.</dd>
+      <dt>count_w20.c</dt>
+      <dd>The level-H weight-20 count of &sect;4 &mdash; exhaustive enumeration of the weight-20 class, finding exactly one further optimal codeword at cost 12.</dd>
+      <dt>cost_M.txt / cost_Q.txt / cost_H12.txt / cost_H_w19.txt / cost_H_w20.txt</dt>
+      <dd>The optimal difference codewords of &sect;4 &mdash; 705 at cost 6 (M), 7 at cost 8 (Q), 7 at cost 12 (H: 4 of weight 18, 2 of weight 19, 1 of weight 20).</dd>
+      <dt>RESULTS.md</dt>
+      <dd>The written result &mdash; method, proof, and caveats in full.</dd>
+      <dt>Demo images</dt>
+      <dd>Rendered original and inverted patterns used for the ZXing-C++ checks, including the demoX set (demoX_A / demoX_B / demoX_P / demoX_compare) for the featured https://x.com &rarr; https://8.com instance.</dd>
+    </dl>
+
+    <h2>Acknowledgements</h2>
+    <p>Better Pelicans used Muse (Meta), accessed November 2026, extensively in this work: to design and implement the enumeration programs, generate and validate the demonstration codewords, search the prior literature, and draft portions of the text. All reported counts and examples were independently checked with separate implementations and scanner software (reedsolo; ZXing), and the enumeration code and result files accompany this paper.</p>
+
+    <h2>References</h2>
+    <ol class="refs">
+      <li>ISO/IEC 18004:2015, <em>Information technology &mdash; Automatic identification and data capture techniques &mdash; QR code bar code symbology specification</em>, International Organization for Standardization, Geneva, 2015.</li>
+      <li>I. S. Reed and G. Solomon, &ldquo;Polynomial codes over certain finite fields,&rdquo; <em>Journal of the Society for Industrial and Applied Mathematics</em>, 8(2):300&ndash;304, 1960.</li>
+      <li>ZXing-C++, open-source barcode image processing library (C++ port of ZXing), used for the end-to-end verification of &sect;3. <em>github.com/zxing-cpp/zxing-cpp</em>.</li>
+      <li>P. Kieseberg, M. Leithner, M. Mulazzani, L. Munroe, S. Schrittwieser, M. Sinha, and E. Weippl, &ldquo;QR Code Security,&rdquo; in <em>Proceedings of the 8th International Conference on Advances in Mobile Computing and Multimedia (MoMM 2010)</em>, Paris, France, 2010.</li>
+      <li>P. Kieseberg, S. Schrittwieser, M. Leithner, M. Mulazzani, A. Gosch, J. Kirsch, and D. Lhee, &ldquo;Malicious Pixels,&rdquo; in <em>Trustworthy Ubiquitous Computing</em>, Atlantis Press, 2012.</li>
+      <li>B. S. Bajaj, &ldquo;Reliability on QR codes and Reed-Solomon codes,&rdquo; arXiv:2407.17364, 2024.</li>
+    </ol>
+
+    <footer>
+      Better Pelicans &middot; <a href="mailto:hello@betterpelicans.com">hello@betterpelicans.com</a> &middot; <a href="index.html">Back to the main page</a>
+    </footer>
+  </main>
+</body>
+</html>

@@ -3,9 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Better Pelicans</title>
-  <meta name="description" content="A collection of really poorly made things.">
-  <meta name="robots" content="noindex, nofollow">
+  <title>Better Pelicans — Five Flips</title>
+  <meta name="description" content="Five flips: the exact minimum number of squares to flip so a Version 1 QR code scans as something else. With the full paper and the code.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b6e5c'/%3E%3Ccircle cx='32' cy='24' r='9' fill='%23faf9f6'/%3E%3Cpath d='M23 26 q-8 -2 -9 -9 q8 3 9 9z' fill='%23e8a13c'/%3E%3Cpath d='M32 33 L24 46 L20 44 L27 33z' fill='%23faf9f6'/%3E%3Ccircle cx='47' cy='46' r='7' fill='none' stroke='%23faf9f6' stroke-width='3'/%3E%3Ccircle cx='21' cy='46' r='7' fill='none' stroke='%23faf9f6' stroke-width='3'/%3E%3Cpath d='M28 46 L40 46' stroke='%23faf9f6' stroke-width='3'/%3E%3Cpath d='M34 46 L38 33 L33 30' fill='none' stroke='%23faf9f6' stroke-width='3'/%3E%3C/svg%3E">
   <style>
     :root { --bg: #faf9f6; --fg: #1c1b18; --muted: #5c5a54; --accent: #0b6e5c; --border: #d9d6cf; }
@@ -13,19 +12,33 @@
     body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
            line-height: 1.6; color: var(--fg); background: var(--bg);
            min-height: 100vh; display: flex; flex-direction: column; }
-    main { flex: 1; max-width: 40rem; margin: 0 auto; padding: 4rem 1.5rem 2rem; }
+    main { flex: 1; max-width: 40rem; margin: 0 auto; padding: 4rem 1.5rem 2rem; width: 100%; }
     .mark { width: 72px; height: 72px; margin-bottom: 1rem; }
     p { color: var(--muted); }
     .status { display: inline-block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
               letter-spacing: 0.06em; color: var(--accent); border: 1px solid var(--accent);
               border-radius: 999px; padding: 0.15rem 0.7rem; margin-bottom: 1rem; }
-    .game-card { margin-top: 2rem; padding: 1rem 1.1rem; border: 1px solid var(--accent);
-                        border-radius: 1rem; background: #eaf4f0; display: grid; gap: 0.2rem; }
-    .game-card strong { color: var(--fg); }
-    .game-card span { color: var(--muted); font-size: 0.95rem; }
-    .game-card a { font-weight: 700; margin-top: 0.25rem; }
+    h1 { font-size: 2.2rem; line-height: 1.15; margin: 0.5rem 0 1rem; }
+    h2 { font-size: 1.25rem; margin: 2.5rem 0 0.75rem; }
     a { color: var(--accent); }
-    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .demo { margin: 2rem 0; text-align: center; }
+    .demo img { width: min(320px, 80vw); height: auto; image-rendering: pixelated;
+                border: 1px solid var(--border); border-radius: 0.5rem; background: #fff; }
+    .toggle { display: inline-flex; border: 1px solid var(--accent); border-radius: 999px; overflow: hidden; margin-bottom: 1rem; }
+    .toggle button { appearance: none; border: 0; background: transparent; color: var(--accent);
+                     font: inherit; font-weight: 600; padding: 0.35rem 1rem; cursor: pointer; }
+    .toggle button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+    .demo figcaption { color: var(--muted); margin-top: 0.75rem; }
+    .demo figcaption code { color: var(--fg); }
+    table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+    th, td { border: 1px solid var(--border); padding: 0.45rem 0.7rem; text-align: left; }
+    th { background: #eaf4f0; }
+    td.num, th.num { text-align: right; }
+    .footnote { font-size: 0.9rem; }
+    ul { color: var(--muted); padding-left: 1.2rem; }
+    ul strong { color: var(--fg); }
+    .links { margin-top: 2.5rem; display: flex; gap: 1.5rem; flex-wrap: wrap; font-weight: 700; }
     footer { border-top: 1px solid var(--border); padding: 1.25rem 1rem; text-align: center;
              color: var(--muted); font-size: 0.9rem; }
     footer a { color: var(--muted); }
@@ -35,10 +48,97 @@
   <main>
     <img class="mark" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b6e5c'/%3E%3Ccircle cx='32' cy='24' r='9' fill='%23faf9f6'/%3E%3Cpath d='M23 26 q-8 -2 -9 -9 q8 3 9 9z' fill='%23e8a13c'/%3E%3Cpath d='M32 33 L24 46 L20 44 L27 33z' fill='%23faf9f6'/%3E%3Ccircle cx='47' cy='46' r='7' fill='none' stroke='%23faf9f6' stroke-width='3'/%3E%3Ccircle cx='21' cy='46' r='7' fill='none' stroke='%23faf9f6' stroke-width='3'/%3E%3Cpath d='M28 46 L40 46' stroke='%23faf9f6' stroke-width='3'/%3E%3Cpath d='M34 46 L38 33 L33 30' fill='none' stroke='%23faf9f6' stroke-width='3'/%3E%3C/svg%3E" alt="Better Pelicans mark">
     <span class="status">For science!</span>
-    <p>A collection of really poorly made things.</p>
-    </main>
+
+    <h1>Five flips</h1>
+    <p>A QR code&rsquo;s error correction is there to shrug off damage. We asked the
+    opposite question: what is the <strong>smallest number of squares you can flip</strong>
+    &mdash; black to white or white to black &mdash; to make a scanner read a
+    Version&nbsp;1 QR code as something else entirely?</p>
+    <p>The answer is <strong>five</strong>. Flip five squares in a code for
+    <code>https://x.com</code> and scanners read it as <code>https://8.com</code>.
+    Try it with your phone:</p>
+
+    <figure class="demo">
+      <div class="toggle" role="group" aria-label="Choose which code to show">
+        <button id="btn-orig" aria-pressed="true">Original</button>
+        <button id="btn-flip" aria-pressed="false">With 5 flips</button>
+      </div>
+      <br>
+      <img id="demo-img" src="img/x-com.png" alt="QR code for https://x.com" width="320" height="320">
+      <figcaption id="demo-cap">Scans as <code>https://x.com</code></figcaption>
+    </figure>
+
+    <p>Nothing is reprinted or replaced: this is the original QR code, altered in
+    as few squares as possible. The altered pattern usually isn&rsquo;t a valid code
+    at all &mdash; it just lands close enough to a <em>different</em> valid code that
+    the scanner&rsquo;s error correction finishes the job and reads out that
+    code&rsquo;s content instead.</p>
+
+    <p>We computed the exact minimum for all four error-correction levels of
+    Version&nbsp;1 &mdash; not by sampling, but by exhaustive enumeration of every
+    candidate pattern, so the counts below are complete. At level L, five is the
+    theoretical floor &mdash; and of the roughly 398 million minimum-weight
+    difference codewords, only 595 achieve it:</p>
+
+    <table>
+      <thead>
+        <tr><th>Error-correction level</th><th class="num">Minimum flips</th><th class="num">Difference codewords achieving it</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>L</td><td class="num">5</td><td class="num">595</td></tr>
+        <tr><td>M</td><td class="num">6</td><td class="num">705</td></tr>
+        <tr><td>Q</td><td class="num">8</td><td class="num">7</td></tr>
+        <tr><td>H</td><td class="num">12</td><td class="num">7*</td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">* H&rsquo;s seven: four of symbol weight 18, two of 19, and one of 20.</p>
+
+    <h2>Why these numbers are exact</h2>
+    <ul>
+      <li><strong>There is a floor.</strong> A bounded-distance decoder can correct a
+      pattern that is a few codewords from a valid code, and any two valid codes differ
+      in at least a fixed number of codewords &mdash; so a successful flip pattern has
+      to bridge most of that gap. That gives a lower bound at each level: 5, 6, 8, 10.</li>
+      <li><strong>The floor is a lower bound, and at H it is not attainable.</strong>
+      L, M and Q reach their floors exactly. H does not: no 10- or 11-flip pattern
+      exists, and 12 is the minimum. That was the surprise in the table.</li>
+      <li><strong>Everything is checked twice.</strong> The enumeration was verified
+      independently with two separate decoders, and the example above was scanned
+      end-to-end. The programs and the full result lists are published with the paper,
+      so anyone can re-run the count.</li>
+    </ul>
+
+    <p>As far as we have been able to find, these minima and counts have not been
+    published before; earlier work estimated higher numbers from testing. The full
+    paper explains the model, the proof, and how it relates to what came before.</p>
+
+    <p class="links">
+      <a href="paper.html">Full paper &rarr;</a>
+      <a href="paper.pdf">Paper (PDF) &rarr;</a>
+      <a href="https://github.com/BetterPelicans/qr-five-flips">Code and data &rarr;</a>
+    </p>
+  </main>
   <footer>
     <a href="mailto:hello@betterpelicans.com">hello@betterpelicans.com</a>
   </footer>
+  <script>
+    (function () {
+      var img = document.getElementById('demo-img');
+      var cap = document.getElementById('demo-cap');
+      var bO = document.getElementById('btn-orig');
+      var bF = document.getElementById('btn-flip');
+      function show(flipped) {
+        img.src = flipped ? 'img/8-com.png' : 'img/x-com.png';
+        img.alt = flipped ? 'The same QR code with five squares flipped; scans as https://8.com'
+                          : 'QR code for https://x.com';
+        cap.innerHTML = flipped ? 'Scans as <code>https://8.com</code> &mdash; five squares differ'
+                                : 'Scans as <code>https://x.com</code>';
+        bO.setAttribute('aria-pressed', String(!flipped));
+        bF.setAttribute('aria-pressed', String(flipped));
+      }
+      bO.addEventListener('click', function () { show(false); });
+      bF.addEventListener('click', function () { show(true); });
+    })();
+  </script>
 </body>
 </html>
