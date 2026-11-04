@@ -30,6 +30,8 @@
                      font: inherit; font-weight: 600; padding: 0.35rem 1rem; cursor: pointer; }
     .toggle button[aria-pressed="true"] { background: var(--accent); color: #fff; }
     .demo figcaption { color: var(--muted); margin-top: 0.75rem; }
+    .pair { display: flex; gap: 1rem; justify-content: center; }
+    .pair img { width: min(220px, 42vw); }
     .demo figcaption code { color: var(--fg); }
     table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
     th, td { border: 1px solid var(--border); padding: 0.45rem 0.7rem; text-align: left; }
@@ -111,6 +113,25 @@
     <p>As far as we have been able to find, these minima and counts have not been
     published before; earlier work estimated higher numbers from testing. The full
     paper explains the model, the proof, and how it relates to what came before.</p>
+
+    <h2>Only got a marker pen?</h2>
+    <p>The counts above let you flip a square either way. A marker pen can only
+    darken &mdash; and on the x.com code at the top of this page, three of the five
+    squares are already black, so a pen alone can&rsquo;t do that one. But the
+    minimum doesn&rsquo;t move: it is still five squares at level L (and 6, 8 and
+    12 at the other levels), because for the right starting code, every square you
+    need is white to begin with. The same five squares prove it one letter along:
+    on <code>https://x.ax</code> they are all white &mdash; blacken just those five,
+    and the code scans as <code>https://8.ax</code>.</p>
+
+    <figure class="demo">
+      <div class="pair">
+        <img src="img/darken-a.png" alt="QR code for https://x.ax">
+        <img src="img/darken-p.png" alt="The same QR code with five squares darkened; scans as https://8.ax">
+      </div>
+      <figcaption><code>https://x.ax</code> as printed (left), and with five squares
+      darkened by a marker (right) &mdash; it scans as <code>https://8.ax</code>.</figcaption>
+    </figure>
 
     <p class="links">
       <a href="paper.html">Full paper &rarr;</a>
